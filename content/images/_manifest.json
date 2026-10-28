@@ -1,0 +1,50 @@
+[
+  {
+    "page": "https://www.watersedgemassage.com/",
+    "src": "https://images.squarespace-cdn.com/content/v1/67e163c7885fa97f835454f0/f23eaae8-07cc-4a9b-a5c9-c4fde4b48134/unsplash-image-TfdlD4wcsJ4.jpg",
+    "file": "images/unsplash-image-TfdlD4wcsJ4.jpg",
+    "alt": "",
+    "role": "inline image",
+    "section_theme": "light"
+  },
+  {
+    "page": "https://www.watersedgemassage.com/",
+    "src": "https://images.squarespace-cdn.com/content/v1/67e163c7885fa97f835454f0/8117705f-0ceb-415b-b80b-15c8e73f0bef/PXL_20230807_151930193_Original.jpg",
+    "file": "images/PXL_20230807_151930193_Original.jpg",
+    "alt": "",
+    "role": "inline image",
+    "section_theme": "light"
+  },
+  {
+    "page": "https://www.watersedgemassage.com/about",
+    "src": "https://images.squarespace-cdn.com/content/v1/67e163c7885fa97f835454f0/915e49b0-0226-4e61-a9e5-7dc21b2a018c/IMG_9454.jpg",
+    "file": "images/IMG_9454.jpg",
+    "alt": "",
+    "role": "inline image",
+    "section_theme": ""
+  },
+  {
+    "page": "https://www.watersedgemassage.com/services",
+    "src": "https://images.squarespace-cdn.com/content/v1/67e163c7885fa97f835454f0/f0febb56-5d02-4882-9f7c-403e7ac80795/Waters_LOGO+B1.png",
+    "file": "images/Waters_LOGO-B1.png",
+    "alt": "",
+    "role": "inline image",
+    "section_theme": "dark-bold"
+  },
+  {
+    "page": "https://www.watersedgemassage.com/rates",
+    "src": "https://images.squarespace-cdn.com/content/v1/67e163c7885fa97f835454f0/8117705f-0ceb-415b-b80b-15c8e73f0bef/PXL_20230807_151930193_Original.jpg",
+    "file": "images/PXL_20230807_151930193_Original.jpg",
+    "alt": "",
+    "role": "inline image",
+    "section_theme": "light-bold"
+  },
+  {
+    "page": "https://www.watersedgemassage.com/contact",
+    "src": "https://images.squarespace-cdn.com/content/v1/67e163c7885fa97f835454f0/40d58e75-c991-42e0-a1cb-936d076289b1/IMG_0002.jpg",
+    "file": "images/IMG_0002.jpg",
+    "alt": "",
+    "role": "inline image",
+    "section_theme": "light"
+  }
+]
