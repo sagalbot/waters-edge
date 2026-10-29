@@ -1,6 +1,8 @@
 ---
 // Cedar title band for inner pages, closed by the ridgeline like the home hero.
-import Ridgeline from "./Ridgeline.astro";
+// The headline and ridgeline carry the page-to-page transition (see src/transitions.ts).
+import HeroRidge from "./HeroRidge.astro";
+import { wash } from "../transitions";
 
 interface Props {
   eyebrow: string;
@@ -9,12 +11,12 @@ interface Props {
 const { eyebrow, title } = Astro.props;
 ---
 
-<section class="page-hero">
+<section class="page-hero" transition:name="hero">
   <div class="container">
-    <p class="eyebrow">{eyebrow}</p>
-    <h1>{title}</h1>
+    <p class="eyebrow" transition:name="hero-eyebrow" transition:animate={wash}>{eyebrow}</p>
+    <h1 transition:name="hero-title" transition:animate={wash}>{title}</h1>
   </div>
-  <div class="page-hero__ridge"><Ridgeline lines={3} /></div>
+  <HeroRidge />
 </section>
 
 <style>
@@ -29,14 +31,5 @@ const { eyebrow, title } = Astro.props;
     font-size: clamp(2.75rem, 6vw, 5.25rem);
     margin-top: 1.5rem;
     max-width: 16ch;
-  }
-  .page-hero__ridge {
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: -0.5rem;
-    color: var(--cream);
-    opacity: 0.7;
-    pointer-events: none;
   }
 </style>

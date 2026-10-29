@@ -148,28 +148,95 @@ summary:focus-visible {
   padding: 0.5rem 1rem;
 }
 
-/* Slow fade-in on scroll (see Base.astro). */
-@media (scripting: enabled) {
-  .reveal {
-    opacity: 0;
-    transform: translateY(16px);
-    transition:
-      opacity 1.2s ease,
-      transform 1.2s ease;
-  }
-  .reveal.is-visible {
-    opacity: 1;
-    transform: none;
-  }
-}
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
-  .reveal {
-    opacity: 1;
-    transform: none;
-    transition: none;
+}
+
+/* Hero ridgeline. It carries over between pages (transition:persist), so its
+   placement is keyed off the hero it currently sits in rather than scoped styles. */
+.ridge-slot {
+  position: absolute;
+  left: 0;
+  right: 0;
+  color: var(--cream);
+  pointer-events: none;
+}
+.hero .ridge-slot {
+  bottom: clamp(2rem, 5vw, 4.5rem);
+}
+.page-hero .ridge-slot {
+  bottom: -0.5rem;
+  opacity: 0.7;
+}
+@media (max-width: 860px) {
+  /* Crop to a stretch of the skyline so the peaks keep their shape on a phone. */
+  .ridge-slot svg.ridgeline {
+    width: 250%;
+    max-width: none;
+    margin-left: -55%;
+  }
+  /* The photo sits on top; the cedar panel rises into it along the ridge. */
+  .hero .ridge-slot {
+    bottom: auto;
+    top: 50vw;
+  }
+  .hero .ridge-slot .ridge-fill {
+    display: block;
+  }
+}
+
+/* Page transitions (see src/transitions.ts). */
+::view-transition-group(hero),
+::view-transition-group(ridge),
+::view-transition-group(hero-title),
+::view-transition-group(hero-eyebrow) {
+  animation-duration: 700ms;
+  animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+}
+::view-transition-old(hero-title),
+::view-transition-old(hero-eyebrow) {
+  mask-image: linear-gradient(90deg, transparent 0 40%, #000 60% 100%);
+  mask-size: 250% 100%;
+  mask-repeat: no-repeat;
+}
+::view-transition-new(hero-title),
+::view-transition-new(hero-eyebrow) {
+  mask-image: linear-gradient(90deg, #000 0 40%, transparent 60% 100%);
+  mask-size: 250% 100%;
+  mask-repeat: no-repeat;
+}
+@keyframes washOut {
+  from {
+    mask-position: 100% 0;
+  }
+  to {
+    mask-position: 0 0;
+    transform: translateX(1.5rem);
+    filter: blur(4px);
+  }
+}
+@keyframes washIn {
+  from {
+    mask-position: 100% 0;
+    transform: translateX(-0.75rem);
+    filter: blur(3px);
+  }
+  to {
+    mask-position: 0 0;
+  }
+}
+@keyframes ridgeFlowOut {
+  to {
+    opacity: 0;
+    transform: translateX(4%);
+  }
+}
+@keyframes ridgeFlowIn {
+  from {
+    opacity: 0;
+    transform: translateX(-4%);
   }
 }
 

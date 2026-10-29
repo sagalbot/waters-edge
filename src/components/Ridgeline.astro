@@ -1,7 +1,8 @@
 ---
 // The North Shore skyline as nested contour lines: the Lions on the left, Grouse and
 // Fromme in the middle, Seymour on the right. The top line is the ridge; each line
-// below it is a lower contour, flatter and lower on the page.
+// below it is a lower contour, flatter and lower on the page. An optional fill under
+// the ridge (shown only where a hero turns it on) lets a panel rise into a photo.
 interface Props {
   lines?: number;
 }
@@ -32,6 +33,7 @@ const paths = Array.from({ length: lines }, (_, k) =>
 ---
 
 <svg class="ridgeline" viewBox="0 0 1440 220" preserveAspectRatio="none" aria-hidden="true">
+  <path class="ridge-fill" d={`${paths[0]}L1460 240L-20 240Z`} />
   {paths.map((d, k) => (
     <path d={d} pathLength="1" style={`--k:${k}`} vector-effect="non-scaling-stroke" />
   ))}
@@ -56,6 +58,13 @@ const paths = Array.from({ length: lines }, (_, k) =>
       draw 2.8s cubic-bezier(0.4, 0, 0.2, 1) calc(0.3s + var(--k) * 0.25s) forwards,
       drift calc(18s + var(--k) * 6s) ease-in-out calc(3s + var(--k) * 0.25s) infinite alternate;
   }
+  .ridge-fill {
+    display: none;
+    fill: var(--cedar);
+    stroke: none;
+    opacity: 1;
+    animation: drift 18s ease-in-out 3s infinite alternate;
+  }
   @keyframes draw {
     to { stroke-dashoffset: 0; }
   }
@@ -64,7 +73,8 @@ const paths = Array.from({ length: lines }, (_, k) =>
     to { transform: translateX(calc(8px + var(--k) * 4px)); }
   }
   @media (prefers-reduced-motion: reduce) {
-    path {
+    path,
+    .ridge-fill {
       animation: none;
       stroke-dashoffset: 0;
     }

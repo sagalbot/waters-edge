@@ -5,7 +5,7 @@ import { BOOKING_URL, NAV } from "../site";
 const current = (href: string) => (Astro.url.pathname.replace(/\/$/, "") === href ? "page" : undefined);
 ---
 
-<header class="site-header">
+<header class="site-header" transition:name="site-header" transition:animate="none">
   <div class="container site-header__inner">
     <a href="/" class="site-header__logo"><Logo /></a>
     <nav aria-label="Main">

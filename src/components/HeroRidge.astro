@@ -1,0 +1,11 @@
+---
+// The hero ridgeline, shared by the home hero and inner-page heroes. Defined once so its
+// transition scope is identical on every page; it persists across navigation and flows
+// into place while the hero resizes. Placement lives in styles/global.css (.ridge-slot).
+import Ridgeline from "./Ridgeline.astro";
+import { flow } from "../transitions";
+---
+
+<div class="ridge-slot" transition:name="ridge" transition:persist="ridge" transition:animate={flow}>
+  <Ridgeline />
+</div>
