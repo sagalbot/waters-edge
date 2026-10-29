@@ -1,6 +1,8 @@
 services:
   web:
     command: pnpm dev --host 127.0.0.1 --port "$PORT" --allowed-hosts
+    # Fixed so existing portal links keep pointing at the dev server across restarts.
+    port: 30954
     health: /
     portal:
       url: /
