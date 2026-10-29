@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# Prepares an Amp orb: installs the site's Node dependencies. Safe to rerun.
+set -euo pipefail
+cd "$(dirname "$0")/.."
+
+echo "==> pnpm install"
+time pnpm install --frozen-lockfile
