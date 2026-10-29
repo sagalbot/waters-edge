@@ -1,0 +1,42 @@
+---
+// Cedar title band for inner pages, closed by the ridgeline like the home hero.
+import Ridgeline from "./Ridgeline.astro";
+
+interface Props {
+  eyebrow: string;
+  title: string;
+}
+const { eyebrow, title } = Astro.props;
+---
+
+<section class="page-hero">
+  <div class="container">
+    <p class="eyebrow">{eyebrow}</p>
+    <h1>{title}</h1>
+  </div>
+  <div class="page-hero__ridge"><Ridgeline lines={3} /></div>
+</section>
+
+<style>
+  .page-hero {
+    position: relative;
+    overflow: hidden;
+    background: var(--cedar);
+    color: var(--cream);
+    padding: clamp(4rem, 9vw, 7rem) 0 clamp(7rem, 13vw, 11rem);
+  }
+  h1 {
+    font-size: clamp(2.75rem, 6vw, 5.25rem);
+    margin-top: 1.5rem;
+    max-width: 16ch;
+  }
+  .page-hero__ridge {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -0.5rem;
+    color: var(--cream);
+    opacity: 0.7;
+    pointer-events: none;
+  }
+</style>

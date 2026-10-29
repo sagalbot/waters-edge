@@ -1,0 +1,84 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHero from "../components/PageHero.astro";
+import Mark from "../../brand/logo/mark-cedar.svg";
+import { BOOKING_URL } from "../site";
+---
+
+<Base
+  title="Services | Water's Edge Massage Therapy"
+  description="Therapeutic massage for injury recovery, relaxation massage for nervous system regulation, and focused treatments for chronic pain, TMJ dysfunction, stress-related tension, and sports injuries."
+>
+  <PageHero eyebrow="Services" title="Our Services" />
+
+  <section class="services container section">
+    <div class="services__copy reveal">
+      <p class="lead">
+        Alexis offers professional massage therapy designed to help relieve pain, reduce stress, and improve overall
+        physical function. Each treatment is customized to meet your unique needs and goals, delivered in a safe and
+        calming environment.
+      </p>
+      <p>
+        Services include therapeutic massage for injury recovery, relaxation massage for nervous system regulation, and
+        focused treatments for conditions such as chronic pain, TMJ dysfunction, stress-related tension, and sports
+        injuries. Alexis has a special interest in working with individuals managing anxiety, persistent pain, and
+        TMJ-related concerns.
+      </p>
+      <p>
+        Whether you're seeking support for a specific condition or looking to improve your general well-being,
+        treatments are grounded in evidence-informed practice and a patient-centered approach that prioritizes comfort,
+        trust, and lasting results.
+      </p>
+      <p class="services__actions">
+        <a class="button" href={BOOKING_URL}>Book now</a>
+        <a class="text-link" href="/rates">Rates <span aria-hidden="true">→</span></a>
+      </p>
+    </div>
+    <Mark class="services__mark" aria-hidden="true" role="presentation" />
+  </section>
+</Base>
+
+<style>
+  .services {
+    display: grid;
+    grid-template-columns: 7fr 4fr;
+    gap: 3rem clamp(3rem, 8vw, 8rem);
+    align-items: center;
+  }
+  .services__copy {
+    max-width: 38rem;
+  }
+  .services__copy p {
+    margin: 0 0 1.5em;
+  }
+  .services__copy .lead {
+    font-family: var(--serif);
+    font-size: clamp(1.625rem, 2.6vw, 2.25rem);
+    line-height: 1.25;
+    color: var(--cedar);
+  }
+  .services__copy .services__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 2.5rem;
+    margin-top: 2.5rem;
+  }
+  .services__mark {
+    width: 100%;
+    max-width: 22rem;
+    height: auto;
+    justify-self: center;
+    opacity: 0.85;
+  }
+  @media (max-width: 860px) {
+    .services {
+      grid-template-columns: 1fr;
+    }
+    .services__mark {
+      max-width: 10rem;
+      justify-self: start;
+      order: -1;
+    }
+  }
+</style>

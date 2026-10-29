@@ -172,3 +172,7 @@ summary:focus-visible {
     transition: none;
   }
 }
+
+.section {
+  padding-block: var(--section);
+}

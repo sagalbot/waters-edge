@@ -1,6 +1,8 @@
 ---
 import Logo from "../../brand/logo/logo-horizontal-cedar.svg";
 import { BOOKING_URL, NAV } from "../site";
+
+const current = (href: string) => (Astro.url.pathname.replace(/\/$/, "") === href ? "page" : undefined);
 ---
 
 <header class="site-header">
@@ -8,14 +10,14 @@ import { BOOKING_URL, NAV } from "../site";
     <a href="/" class="site-header__logo"><Logo /></a>
     <nav aria-label="Main">
       <ul class="site-header__nav">
-        {NAV.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+        {NAV.map((l) => <li><a href={l.href} aria-current={current(l.href)}>{l.label}</a></li>)}
       </ul>
     </nav>
     <a class="button" href={BOOKING_URL}>Book now</a>
     <details class="site-header__menu">
       <summary>Menu</summary>
       <ul>
-        {NAV.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+        {NAV.map((l) => <li><a href={l.href} aria-current={current(l.href)}>{l.label}</a></li>)}
       </ul>
     </details>
   </div>
@@ -60,6 +62,11 @@ import { BOOKING_URL, NAV } from "../site";
   }
   .site-header__nav a:hover {
     color: var(--moss);
+  }
+  .site-header__nav a[aria-current="page"] {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.5em;
   }
   .site-header__menu {
     display: none;

@@ -1,0 +1,146 @@
+---
+import { Image } from "astro:assets";
+import Base from "../layouts/Base.astro";
+import PageHero from "../components/PageHero.astro";
+import ContactForm from "../components/ContactForm.astro";
+import { BOOKING_URL, EMAIL } from "../site";
+import portrait from "../../content/images/IMG_9454.jpg";
+---
+
+<Base
+  title="About Alexis | Water's Edge Massage Therapy"
+  description="Alexis Penner is a Registered Massage Therapist with over 10 years of experience."
+>
+  <PageHero eyebrow="About" title="About Alexis" />
+
+  <section class="bio container section">
+    <Image
+      class="bio__photo"
+      src={portrait}
+      alt="Alexis Penner, Registered Massage Therapist, smiling in a brown knit sweater"
+      widths={[480, 760, 1100]}
+      sizes="(max-width: 860px) 100vw, 40vw"
+      loading="eager"
+    />
+    <div class="bio__copy reveal">
+      <p class="lead">
+        Since 2015, Alexis has been a dedicated Registered Massage Therapist, blending scientific knowledge with an
+        intuitive and compassionate approach to deliver personalized, therapeutic care. She recognizes the deep
+        connection between physical and mental well-being and creates a safe, supportive space for healing.
+      </p>
+      <p>
+        Believing that every person is unique, Alexis tailors each treatment to individual needs, emphasizing patient
+        education and self-awareness as key components of recovery. She has an innate ability to meet people where
+        they are, allowing her to connect with authenticity and adapt her treatments to support each person’s goals,
+        comfort, and capacity. Alexis remains committed to ongoing learning, with a focus on holistic and
+        evidence-informed approaches that empower lasting change.
+      </p>
+      <p>
+        Her passion for healing is deeply personal, shaped by her own experiences recovering from injuries, including
+        a serious car accident and the physical demands of an active lifestyle. Through manual therapy, home care, and
+        strength training, she helps patients move toward their most functional, pain-free selves.
+      </p>
+      <p>
+        Outside the clinic, Alexis finds balance in nature with trail running, gravel and mountain biking, and
+        spending time with her dog. North Vancouver’s natural beauty and active lifestyle inspire her daily, and she
+        is grateful to call it home.
+      </p>
+    </div>
+  </section>
+
+  <section class="reach section" aria-labelledby="reach-title">
+    <div class="container reach__grid reveal">
+      <div>
+        <h2 id="reach-title">Have Questions or Want to Book a Massage?</h2>
+        <p>
+          I’d love to hear from you. Feel free to reach out using the form below or email me directly. I’ll get back
+          to you within 1–2 business days.
+        </p>
+        <p class="signoff">
+          Looking forward to connecting,<br />
+          <span class="signoff__name">Alexis</span><br />
+          <em>Registered Massage Therapist</em>
+        </p>
+        <p class="reach__links">
+          <a class="button" href={BOOKING_URL}>Book now</a>
+          <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
+        </p>
+      </div>
+      <ContactForm submit="Submit" />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .bio {
+    display: grid;
+    grid-template-columns: 5fr 7fr;
+    gap: 3rem clamp(3rem, 8vw, 8rem);
+    align-items: start;
+  }
+  .bio__photo {
+    position: sticky;
+    top: 7rem;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    display: block;
+  }
+  .bio__copy {
+    max-width: 38rem;
+  }
+  .bio__copy p {
+    margin: 0 0 1.5em;
+  }
+  .bio__copy .lead {
+    font-family: var(--serif);
+    font-size: clamp(1.625rem, 2.6vw, 2.25rem);
+    line-height: 1.25;
+    color: var(--cedar);
+    margin-bottom: 1.5em;
+  }
+
+  .reach {
+    background: var(--sand);
+  }
+  .reach__grid {
+    display: grid;
+    grid-template-columns: 6fr 5fr;
+    gap: 3rem clamp(3rem, 8vw, 8rem);
+  }
+  .reach h2 {
+    font-size: clamp(2.25rem, 4vw, 3.5rem);
+    color: var(--cedar);
+    margin-bottom: 2rem;
+    max-width: 14ch;
+  }
+  .reach p {
+    max-width: 30rem;
+  }
+  .signoff {
+    margin-top: 2rem;
+  }
+  .signoff__name {
+    font-family: var(--serif);
+    font-size: 1.75rem;
+    color: var(--cedar);
+  }
+  .reach__links {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 2rem;
+    margin-top: 2.5rem;
+  }
+
+  @media (max-width: 860px) {
+    .bio,
+    .reach__grid {
+      grid-template-columns: 1fr;
+    }
+    .bio__photo {
+      position: static;
+    }
+  }
+</style>

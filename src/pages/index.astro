@@ -2,21 +2,17 @@
 import { Image } from "astro:assets";
 import Base from "../layouts/Base.astro";
 import Ridgeline from "../components/Ridgeline.astro";
+import RatesTable from "../components/RatesTable.astro";
 import { BOOKING_URL, EMAIL, MAP_URL, PHONE, PHONE_SMS } from "../site";
 import landscape from "../../content/images/PXL_20230807_151930193_Original.jpg";
 import portrait from "../../content/images/IMG_9454.jpg";
 
 const focus = ["Anxiety", "Chronic Pain", "Sports Injuries", "Pregnancy", "TMJ Dysfunction"];
-const rates = [
-  { length: "45 Minutes", price: "$110 + GST" },
-  { length: "60 Minutes", price: "$135 + GST" },
-  { length: "75 Minutes", price: "$160 + GST" },
-];
 ---
 
 <Base
-  title="Water’s Edge Massage Therapy | RMT in North Vancouver"
-  description="Registered massage therapy in North Vancouver, B.C. Compassionate, patient-centered care for anxiety, chronic pain, sports injuries, pregnancy, and TMJ dysfunction."
+  title="Water's Edge Massage Therapy | Registered Massage Therapist in North Vancouver"
+  description="Trauma-informed massage therapy in North Vancouver for anxiety, chronic pain, and sports injuries. Book a session with Alexis, RMT, today."
 >
   <section class="hero">
     <div class="hero__panel">
@@ -91,16 +87,7 @@ const rates = [
       <h2 id="rates-title" class="eyebrow">Rates</h2>
     </div>
     <div class="rates__grid">
-      <dl class="rates__table">
-        {
-          rates.map((r) => (
-            <div>
-              <dt>{r.length}</dt>
-              <dd>{r.price}</dd>
-            </div>
-          ))
-        }
-      </dl>
+      <RatesTable />
       <div class="rates__aside">
         <a class="button" href={BOOKING_URL}>Book Now</a>
         <p>
@@ -249,28 +236,6 @@ const rates = [
     grid-template-columns: 7fr 4fr;
     gap: 3rem clamp(3rem, 8vw, 8rem);
     align-items: start;
-  }
-  .rates__table {
-    margin: 0;
-    border-top: 1px solid var(--rule);
-  }
-  .rates__table div {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    gap: 1rem;
-    padding: 1.25rem 0;
-    border-bottom: 1px solid var(--rule);
-  }
-  .rates__table dt {
-    font-family: var(--serif);
-    font-size: clamp(1.5rem, 2.4vw, 2rem);
-    color: var(--cedar);
-  }
-  .rates__table dd {
-    margin: 0;
-    font-size: 1.0625rem;
-    letter-spacing: 0.02em;
   }
   .rates__aside {
     padding-left: clamp(0rem, 4vw, 3.5rem);

@@ -1,0 +1,82 @@
+---
+import Base from "../layouts/Base.astro";
+import PageHero from "../components/PageHero.astro";
+import ContactForm from "../components/ContactForm.astro";
+import { BOOKING_URL, EMAIL, PHONE, PHONE_SMS } from "../site";
+
+const mapSrc =
+  "https://www.google.com/maps?q=" +
+  encodeURIComponent("500-224 Esplanade West, North Vancouver, BC") +
+  "&z=15&output=embed";
+---
+
+<Base
+  title="Contact | Water's Edge Massage Therapy"
+  description="Water's Edge Massage Therapy is on the 5th floor of the Harbour Quay Building, 224 West Esplanade, North Vancouver. Guest parking, directions, and contact details."
+>
+  <PageHero eyebrow="Contact" title="Have Questions?" />
+
+  <section class="contact container section">
+    <div class="contact__info reveal">
+      <p class="lead">We are located at the Harbour Quay Building on the 5th floor- 224 West Esplanade.</p>
+      <h2 class="eyebrow">Parking</h2>
+      <p>Guest parking is behind the building in Stalls #13 and #14 only.</p>
+      <p>Street parking along Esplanade, Semisch, Chesterfield as well as 1st and 2nd St.</p>
+      <p>Paid parking under Sailor Hagars Pub.</p>
+      <h2 class="eyebrow">Contact</h2>
+      <p>
+        <a href={`mailto:${EMAIL}`}>{EMAIL}</a><br />
+        <a href={PHONE_SMS}>{PHONE}</a> Text Only
+      </p>
+      <a class="button" href={BOOKING_URL}>Book now</a>
+    </div>
+    <ContactForm submit="Send" />
+  </section>
+
+  <iframe
+    class="map"
+    title="Map: 500-224 Esplanade West, North Vancouver"
+    src={mapSrc}
+    loading="lazy"
+    referrerpolicy="no-referrer-when-downgrade"></iframe>
+</Base>
+
+<style>
+  .contact {
+    display: grid;
+    grid-template-columns: 6fr 5fr;
+    gap: 3rem clamp(3rem, 8vw, 8rem);
+    align-items: start;
+  }
+  .contact__info {
+    max-width: 34rem;
+  }
+  .contact__info p {
+    margin: 0 0 0.75em;
+  }
+  .contact__info .lead {
+    font-family: var(--serif);
+    font-size: clamp(1.625rem, 2.6vw, 2.25rem);
+    line-height: 1.25;
+    color: var(--cedar);
+    margin-bottom: 2.5rem;
+  }
+  .contact__info .eyebrow {
+    margin: 2.25rem 0 0.75rem;
+  }
+  .contact__info .button {
+    margin-top: 2rem;
+  }
+  .map {
+    display: block;
+    width: 100%;
+    height: clamp(20rem, 40vw, 28rem);
+    border: 0;
+    filter: grayscale(0.85) sepia(0.15) contrast(0.95);
+  }
+  @media (max-width: 860px) {
+    .contact {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

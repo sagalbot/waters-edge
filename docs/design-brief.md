@@ -65,4 +65,5 @@ West Coast outdoor and hospitality brands: Tofino resorts and Arc'teryx editoria
 - **Missing content**: business hours, social links, and testimonials.
 - **Logo**: original vector files, if any exist.
 - **Photos**: new photos of Alexis and the clinic.
+- **Contact form**: the old forms ran on Squarespace. The new form opens the visitor's email app until we pick hosting and a form service.
 - **Pregnancy massage and cancellation policy**: both appear only on Jane. Should they go on the site?

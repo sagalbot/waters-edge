@@ -11,3 +11,9 @@ export const NAV = [
   { href: "/rates", label: "Rates" },
   { href: "/contact", label: "Contact" },
 ];
+
+export const RATES = [
+  { length: "45 Minutes", price: "$110 + GST" },
+  { length: "60 Minutes", price: "$135 + GST" },
+  { length: "75 Minutes", price: "$160 + GST" },
+];

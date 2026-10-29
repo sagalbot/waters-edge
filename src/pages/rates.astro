@@ -1,0 +1,79 @@
+---
+import { Image } from "astro:assets";
+import Base from "../layouts/Base.astro";
+import PageHero from "../components/PageHero.astro";
+import RatesTable from "../components/RatesTable.astro";
+import { BOOKING_URL } from "../site";
+import landscape from "../../content/images/PXL_20230807_151930193_Original.jpg";
+---
+
+<Base
+  title="Rates | Water's Edge Massage Therapy"
+  description="45, 60, and 75 minute registered massage therapy appointments in North Vancouver, with direct billing to Pacific Blue Cross, Telus Health, Sunlife, Empire Life, and GreenShield."
+>
+  <PageHero eyebrow="Rates" title="Rates and Pricing" />
+
+  <section class="rates container section">
+    <div class="rates__copy reveal">
+      <RatesTable />
+      <a class="button rates__book" href={BOOKING_URL}>Book Now</a>
+      <div class="rates__notes">
+        <p>
+          All initial appointments include a health history intake and assessment, establishing treatment goals and
+          Consent, treatment and home exercise.
+        </p>
+        <p>We offer Direct Billing to Pacific Blue Cross, Telus Health, Sunlife, Empire Life, and GreenShield.</p>
+        <p>We are currently <strong>not</strong> accepting new ICBC patients and we <strong>do not</strong> accept WSCB</p>
+      </div>
+    </div>
+    <Image
+      class="rates__photo"
+      src={landscape}
+      alt="Coastal pine trees framing calm water and distant mountains"
+      widths={[480, 760, 1100]}
+      sizes="(max-width: 860px) 100vw, 35vw"
+    />
+  </section>
+</Base>
+
+<style>
+  .rates {
+    display: grid;
+    grid-template-columns: 7fr 4fr;
+    gap: 3rem clamp(3rem, 8vw, 8rem);
+    align-items: start;
+  }
+  .rates__book {
+    margin-top: 2.5rem;
+  }
+  .rates__notes {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--rule);
+    max-width: 36rem;
+  }
+  .rates__notes p {
+    margin: 0 0 1em;
+    font-size: 0.9375rem;
+    color: color-mix(in srgb, var(--ink) 80%, transparent);
+  }
+  .rates__notes strong {
+    font-weight: 500;
+    color: var(--ink);
+  }
+  .rates__photo {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    display: block;
+  }
+  @media (max-width: 860px) {
+    .rates {
+      grid-template-columns: 1fr;
+    }
+    .rates__photo {
+      aspect-ratio: 4 / 3;
+    }
+  }
+</style>
