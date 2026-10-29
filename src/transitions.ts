@@ -4,13 +4,13 @@
 // next page (transition:persist) and only its live self is shown, still moving, as it
 // rides the hero's edge. Its outgoing snapshot is a frozen copy, so it is never shown.
 const EASE = "var(--tide-ease)"; // see styles/global.css
-const TIDE = "900ms";
+const TIDE = "700ms";
 
 const both = <T>(anim: T) => ({ forwards: anim, backwards: anim });
 
 export const wash = both({
-  old: { name: "washOut", duration: "560ms", easing: EASE, fillMode: "both" },
-  new: { name: "washIn", duration: "700ms", delay: "180ms", easing: EASE, fillMode: "both" },
+  old: { name: "washOut", duration: "440ms", easing: EASE, fillMode: "both" },
+  new: { name: "washIn", duration: "540ms", delay: "140ms", easing: EASE, fillMode: "both" },
 });
 
 export const tide = both({

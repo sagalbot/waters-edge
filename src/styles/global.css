@@ -214,17 +214,18 @@ summary:focus-visible {
   }
 }
 
-/* Page transitions (see src/transitions.ts). Everything shares one slow tide. */
+/* Page transitions (see src/transitions.ts). Everything shares one tide, unhurried but
+   short enough that touring every page never feels like waiting. */
 ::view-transition-group(hero),
 ::view-transition-group(ridge),
 ::view-transition-group(hero-title),
 ::view-transition-group(hero-eyebrow) {
-  animation-duration: 900ms;
+  animation-duration: 700ms;
   animation-timing-function: var(--tide-ease);
 }
 ::view-transition-old(root),
 ::view-transition-new(root) {
-  animation-duration: 600ms;
+  animation-duration: 450ms;
   animation-timing-function: ease;
 }
 /* A hero off screen at either end: no hero tide, just the page crossfade, and the
@@ -283,10 +284,10 @@ html[data-hero-away] :is(.hero, .page-hero, .ridge-slot, h1, .eyebrow) {
 /* A link tapped in the mobile drawer: the open drawer's snapshot slides away while the
    page transition plays underneath (see components/MobileMenu.astro). */
 ::view-transition-old(menu-drawer) {
-  animation: drawerOut 700ms var(--tide-ease) both;
+  animation: drawerOut 600ms var(--tide-ease) both;
 }
 ::view-transition-old(menu-scrim) {
-  animation: tideOut 600ms ease both;
+  animation: tideOut 450ms ease both;
 }
 @keyframes drawerOut {
   to {

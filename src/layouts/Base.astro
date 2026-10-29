@@ -42,3 +42,17 @@ const { title, description } = Astro.props;
     <MobileMenu />
   </body>
 </html>
+
+<script>
+  // While a page transition plays, Chromium hit-tests only <html>, so a tap on the next
+  // link or the menu toggle would be lost. Click whatever is under the pointer instead:
+  // the router cuts the running transition short, so touring the site never waits on one.
+  document.addEventListener("click", (e) => {
+    if (e.target !== document.documentElement || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    const hit = [...document.querySelectorAll<HTMLElement>("a[href], button")].find((el) => {
+      const r = el.getBoundingClientRect();
+      return el.checkVisibility() && e.clientX >= r.left && e.clientX <= r.right && e.clientY >= r.top && e.clientY <= r.bottom;
+    });
+    hit?.click();
+  });
+</script>
