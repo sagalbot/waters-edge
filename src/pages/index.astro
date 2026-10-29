@@ -6,7 +6,7 @@ import Ridgeline from "../components/Ridgeline.astro";
 import RatesTable from "../components/RatesTable.astro";
 import HeroRidge from "../components/HeroRidge.astro";
 import { BOOKING_URL, EMAIL, MAP_URL, PHONE, PHONE_SMS } from "../site";
-import { wash } from "../transitions";
+import { tide, wash } from "../transitions";
 import landscape from "../../content/images/PXL_20230807_151930193_Original.jpg";
 import portrait from "../../content/images/IMG_9454.jpg";
 
@@ -17,7 +17,7 @@ const focus = (await getCollection("focus")).sort((a, b) => a.data.order - b.dat
   title="Water's Edge Massage Therapy | Registered Massage Therapist in North Vancouver"
   description="Trauma-informed massage therapy in North Vancouver for anxiety, chronic pain, and sports injuries. Book a session with Alexis, RMT, today."
 >
-  <section class="hero" transition:name="hero">
+  <section class="hero" transition:name="hero" transition:animate={tide}>
     <div class="hero__panel">
       <div class="hero__copy">
         <p class="eyebrow" transition:name="hero-eyebrow" transition:animate={wash}>North Vancouver, B.C</p>
@@ -147,7 +147,9 @@ const focus = (await getCollection("focus")).sort((a, b) => a.data.order - b.dat
   }
   .hero h1 {
     font-size: clamp(2.75rem, 5.4vw, 5rem);
-    margin: 1.5rem 0 2.75rem;
+    margin: 1.5rem 0 calc(2.75rem - 0.2em);
+    /* Keeps descenders inside the box the transition wash masks. */
+    padding-bottom: 0.2em;
   }
   .hero__photo {
     position: relative;

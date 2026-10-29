@@ -13,6 +13,7 @@
 
   --gutter: clamp(1.25rem, 4vw, 3.5rem);
   --section: clamp(5rem, 11vw, 9.5rem);
+  --ridge-inset: clamp(2rem, 5vw, 4.5rem);
 }
 
 *,
@@ -155,20 +156,16 @@ summary:focus-visible {
 }
 
 /* Hero ridgeline. It carries over between pages (transition:persist), so its
-   placement is keyed off the hero it currently sits in rather than scoped styles. */
+   placement is keyed off the hero it currently sits in rather than scoped styles.
+   It sits the same distance above every hero's bottom edge, so during a transition
+   it rides that edge as the hero changes height. */
 .ridge-slot {
   position: absolute;
   left: 0;
   right: 0;
+  bottom: var(--ridge-inset);
   color: var(--cream);
   pointer-events: none;
-}
-.hero .ridge-slot {
-  bottom: clamp(2rem, 5vw, 4.5rem);
-}
-.page-hero .ridge-slot {
-  bottom: -0.5rem;
-  opacity: 0.7;
 }
 @media (max-width: 860px) {
   /* Crop to a stretch of the skyline so the peaks keep their shape on a phone. */
@@ -187,25 +184,43 @@ summary:focus-visible {
   }
 }
 
-/* Page transitions (see src/transitions.ts). */
+/* Page transitions (see src/transitions.ts). Everything shares one slow tide. */
 ::view-transition-group(hero),
 ::view-transition-group(ridge),
 ::view-transition-group(hero-title),
 ::view-transition-group(hero-eyebrow) {
-  animation-duration: 700ms;
+  animation-duration: 900ms;
   animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+}
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 600ms;
+  animation-timing-function: ease;
+}
+/* The hero is clipped to its changing height, never stretched, and the old and new
+   heroes crossfade over solid cedar, so its edge recedes or rises as one clean
+   tide line instead of paling while both halves are semi-transparent. */
+::view-transition-image-pair(hero) {
+  overflow: hidden;
+  background: var(--cedar);
+}
+/* Headlines keep their natural size while they move; only the mask washes them. */
+::view-transition-old(hero-title),
+::view-transition-old(hero-eyebrow),
+::view-transition-new(hero-title),
+::view-transition-new(hero-eyebrow) {
+  inline-size: auto;
+  block-size: auto;
+  mask-size: 250% 100%;
+  mask-repeat: no-repeat;
 }
 ::view-transition-old(hero-title),
 ::view-transition-old(hero-eyebrow) {
   mask-image: linear-gradient(90deg, transparent 0 40%, #000 60% 100%);
-  mask-size: 250% 100%;
-  mask-repeat: no-repeat;
 }
 ::view-transition-new(hero-title),
 ::view-transition-new(hero-eyebrow) {
   mask-image: linear-gradient(90deg, #000 0 40%, transparent 60% 100%);
-  mask-size: 250% 100%;
-  mask-repeat: no-repeat;
 }
 @keyframes washOut {
   from {
@@ -227,16 +242,20 @@ summary:focus-visible {
     mask-position: 0 0;
   }
 }
-@keyframes ridgeFlowOut {
+@keyframes tideOut {
   to {
     opacity: 0;
-    transform: translateX(4%);
   }
 }
-@keyframes ridgeFlowIn {
+@keyframes tideIn {
   from {
     opacity: 0;
-    transform: translateX(-4%);
+  }
+}
+@keyframes tideHold {
+  from,
+  to {
+    opacity: 1;
   }
 }
 

@@ -2,7 +2,7 @@
 // Cedar title band for inner pages, closed by the ridgeline like the home hero.
 // The headline and ridgeline carry the page-to-page transition (see src/transitions.ts).
 import HeroRidge from "./HeroRidge.astro";
-import { wash } from "../transitions";
+import { tide, wash } from "../transitions";
 
 interface Props {
   eyebrow: string;
@@ -11,7 +11,7 @@ interface Props {
 const { eyebrow, title } = Astro.props;
 ---
 
-<section class="page-hero" transition:name="hero">
+<section class="page-hero" transition:name="hero" transition:animate={tide}>
   <div class="container">
     <p class="eyebrow" transition:name="hero-eyebrow" transition:animate={wash}>{eyebrow}</p>
     <h1 transition:name="hero-title" transition:animate={wash}>{title}</h1>
@@ -25,11 +25,20 @@ const { eyebrow, title } = Astro.props;
     overflow: hidden;
     background: var(--cedar);
     color: var(--cream);
-    padding: clamp(4rem, 9vw, 7rem) 0 clamp(7rem, 13vw, 11rem);
+    padding: clamp(4rem, 9vw, 7rem) 0 calc(clamp(6rem, 11vw, 9rem) + var(--ridge-inset));
+  }
+  @media (max-width: 860px) {
+    /* The phone ridge is cropped wider, so it stands taller (see global.css). */
+    .page-hero {
+      padding-bottom: calc(var(--ridge-inset) + 32vw + 1rem);
+    }
   }
   h1 {
     font-size: clamp(2.75rem, 6vw, 5.25rem);
     margin-top: 1.5rem;
     max-width: 16ch;
+    /* Keeps descenders inside the box the transition wash masks. */
+    padding-bottom: 0.2em;
+    margin-bottom: -0.2em;
   }
 </style>
