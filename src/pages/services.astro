@@ -1,8 +1,20 @@
 ---
+import { getCollection, render } from "astro:content";
 import Base from "../layouts/Base.astro";
 import PageHero from "../components/PageHero.astro";
 import Mark from "../../brand/logo/mark-cedar.svg";
 import { BOOKING_URL } from "../site";
+
+const focus = await Promise.all(
+  (await getCollection("focus"))
+    .sort((a, b) => a.data.order - b.data.order)
+    .map(async (f) => ({
+      ...f,
+      Content: (await render(f)).Content,
+      // Placeholder files hold only an HTML comment until Alexis writes the text.
+      written: (f.body ?? "").replace(/<!--[\s\S]*?-->/g, "").trim() !== "",
+    })),
+);
 ---
 
 <Base
@@ -35,6 +47,20 @@ import { BOOKING_URL } from "../site";
       </p>
     </div>
     <Mark class="services__mark" aria-hidden="true" role="presentation" />
+  </section>
+
+  <section class="focus container section" aria-labelledby="focus-title">
+    <h2 id="focus-title" class="eyebrow">Focus Areas</h2>
+    <ul>
+      {
+        focus.map(({ id, data, Content, written }) => (
+          <li id={id}>
+            <h3>{data.title}</h3>
+            {written && <div class="focus__body"><Content /></div>}
+          </li>
+        ))
+      }
+    </ul>
   </section>
 </Base>
 
@@ -71,7 +97,43 @@ import { BOOKING_URL } from "../site";
     justify-self: center;
     opacity: 0.85;
   }
+  .focus {
+    padding-top: 0;
+  }
+  .focus .eyebrow {
+    margin: 0 0 2rem;
+  }
+  .focus ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--rule);
+  }
+  .focus li {
+    display: grid;
+    grid-template-columns: 4fr 7fr;
+    gap: 1rem clamp(3rem, 8vw, 8rem);
+    padding: 1.75rem 0;
+    border-bottom: 1px solid var(--rule);
+    scroll-margin-top: 6rem;
+  }
+  .focus h3 {
+    font-size: clamp(1.5rem, 2.4vw, 2rem);
+    color: var(--cedar);
+  }
+  .focus__body {
+    max-width: 38rem;
+  }
+  .focus__body :global(p) {
+    margin: 0 0 1em;
+  }
+  .focus__body :global(p:last-child) {
+    margin-bottom: 0;
+  }
   @media (max-width: 860px) {
+    .focus li {
+      grid-template-columns: 1fr;
+    }
     .services {
       grid-template-columns: 1fr;
     }
