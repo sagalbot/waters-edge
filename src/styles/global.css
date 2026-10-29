@@ -1,0 +1,174 @@
+:root {
+  --cedar: #2e4236;
+  --ink: #23332a;
+  --moss: #6e7b57;
+  --stone: #cfc6b6;
+  --sand: #ebe4d8;
+  --cream: #f4efe6;
+  --clay: #c98468;
+  --rule: color-mix(in srgb, var(--cedar) 18%, transparent);
+
+  --serif: "Cormorant Garamond Variable", "Cormorant Garamond", Georgia, serif;
+  --sans: "Jost Variable", "Jost", system-ui, sans-serif;
+
+  --gutter: clamp(1.25rem, 4vw, 3.5rem);
+  --section: clamp(5rem, 11vw, 9.5rem);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 1.0625rem;
+  font-weight: 380;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+img,
+svg {
+  max-width: 100%;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--serif);
+  font-weight: 450;
+  line-height: 1.08;
+  letter-spacing: -0.01em;
+  margin: 0;
+}
+
+a {
+  color: var(--cedar);
+}
+
+.container {
+  width: 100%;
+  max-width: 82rem;
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+}
+
+.eyebrow {
+  font-family: var(--sans);
+  font-size: 0.75rem;
+  font-weight: 450;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  line-height: 1.4;
+}
+
+/* Numbered section label: "01 ——" over "WHAT WE OFFER" */
+.section-label {
+  display: grid;
+  gap: 0.6rem;
+  margin-bottom: clamp(2.5rem, 5vw, 4rem);
+}
+.section-label__num {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.8125rem;
+  letter-spacing: 0.08em;
+}
+.section-label__num::after {
+  content: "";
+  width: 3rem;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.5;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.8rem 1.9rem;
+  border-radius: 999px;
+  background: var(--clay);
+  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 0.3s ease;
+}
+.button:hover {
+  background: #d4967d;
+}
+.button:focus-visible,
+a:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--moss);
+  outline-offset: 3px;
+}
+
+.text-link {
+  display: inline-flex;
+  gap: 0.6rem;
+  align-items: center;
+  font-family: var(--serif);
+  font-size: 1.25rem;
+  color: var(--cedar);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.35em;
+}
+.text-link span {
+  transition: transform 0.3s ease;
+}
+.text-link:hover span {
+  transform: translateX(4px);
+}
+
+.skip {
+  position: absolute;
+  left: -999px;
+}
+.skip:focus {
+  left: 1rem;
+  top: 1rem;
+  z-index: 100;
+  background: var(--cream);
+  padding: 0.5rem 1rem;
+}
+
+/* Slow fade-in on scroll (see Base.astro). */
+@media (scripting: enabled) {
+  .reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition:
+      opacity 1.2s ease,
+      transform 1.2s ease;
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}

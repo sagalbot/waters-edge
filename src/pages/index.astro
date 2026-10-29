@@ -1,0 +1,348 @@
+---
+import { Image } from "astro:assets";
+import Base from "../layouts/Base.astro";
+import Ridgeline from "../components/Ridgeline.astro";
+import { BOOKING_URL, EMAIL, MAP_URL, PHONE, PHONE_SMS } from "../site";
+import landscape from "../../content/images/PXL_20230807_151930193_Original.jpg";
+import portrait from "../../content/images/IMG_9454.jpg";
+
+const focus = ["Anxiety", "Chronic Pain", "Sports Injuries", "Pregnancy", "TMJ Dysfunction"];
+const rates = [
+  { length: "45 Minutes", price: "$110 + GST" },
+  { length: "60 Minutes", price: "$135 + GST" },
+  { length: "75 Minutes", price: "$160 + GST" },
+];
+---
+
+<Base
+  title="Water’s Edge Massage Therapy | RMT in North Vancouver"
+  description="Registered massage therapy in North Vancouver, B.C. Compassionate, patient-centered care for anxiety, chronic pain, sports injuries, pregnancy, and TMJ dysfunction."
+>
+  <section class="hero">
+    <div class="hero__panel">
+      <div class="hero__copy">
+        <p class="eyebrow">North Vancouver, B.C</p>
+        <h1>Water’s Edge Massage Therapy</h1>
+        <a class="button" href={BOOKING_URL}>Book</a>
+      </div>
+    </div>
+    <div class="hero__photo">
+      <Image
+        src={landscape}
+        alt="Coastal pine trees framing calm water and distant mountains"
+        widths={[720, 1100, 1500]}
+        sizes="(max-width: 860px) 100vw, 50vw"
+        loading="eager"
+        fetchpriority="high"
+      />
+    </div>
+    <div class="hero__ridge"><Ridgeline /></div>
+  </section>
+
+  <section class="offer container reveal" aria-labelledby="offer-title">
+    <div class="section-label">
+      <span class="section-label__num">01</span>
+      <h2 id="offer-title" class="eyebrow">What We Offer</h2>
+    </div>
+    <div class="offer__grid">
+      <div>
+        <p class="display">where land meets water</p>
+        <p class="offer__body">
+          At Water's Edge Massage Therapy in North Vancouver, B.C, we invite you to experience the tranquility and
+          restorative power found where land meets water. Just as the water's edge offers a space for reflection and
+          renewal, our practice provides a sanctuary where your body and mind can find balance and healing. Through
+          compassionate, patient-centered massage therapy, we support individuals dealing with anxiety, chronic pain,
+          sports injuries, pregnancy, and TMJ dysfunction, to name a few. Our treatments blend therapeutic techniques
+          with a calming approach, aiming to ease physical discomfort while fostering a sense of safety and relaxation.
+        </p>
+      </div>
+      <ul class="focus" aria-label="Focus areas">
+        {focus.map((f) => <li>{f}</li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="about reveal" aria-labelledby="about-title">
+    <div class="container about__grid">
+      <Image
+        class="about__photo"
+        src={portrait}
+        alt="Alexis Penner, Registered Massage Therapist, smiling in a brown knit sweater"
+        widths={[480, 760, 1100]}
+        sizes="(max-width: 860px) 100vw, 45vw"
+      />
+      <div class="about__copy">
+        <div class="section-label">
+          <span class="section-label__num">02</span>
+          <h2 id="about-title" class="eyebrow">About Alexis</h2>
+        </div>
+        <p class="lead">
+          Since 2015, Alexis has been a dedicated Registered Massage Therapist, blending scientific knowledge with an
+          intuitive and compassionate approach to deliver personalized, therapeutic care.
+        </p>
+        <a class="text-link" href="/about">About Alexis <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+  </section>
+
+  <section class="rates container reveal" aria-labelledby="rates-title">
+    <div class="section-label">
+      <span class="section-label__num">03</span>
+      <h2 id="rates-title" class="eyebrow">Rates</h2>
+    </div>
+    <div class="rates__grid">
+      <dl class="rates__table">
+        {
+          rates.map((r) => (
+            <div>
+              <dt>{r.length}</dt>
+              <dd>{r.price}</dd>
+            </div>
+          ))
+        }
+      </dl>
+      <div class="rates__aside">
+        <a class="button" href={BOOKING_URL}>Book Now</a>
+        <p>
+          All initial appointments include a health history intake and assessment, establishing treatment goals and
+          Consent, treatment and home exercise.
+        </p>
+        <p>We offer Direct Billing to Pacific Blue Cross, Telus Health, Sunlife, Empire Life, and GreenShield.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="visit reveal" aria-labelledby="visit-title">
+    <div class="container">
+      <div class="section-label">
+        <span class="section-label__num">04</span>
+        <h2 id="visit-title" class="eyebrow">Visit</h2>
+      </div>
+      <div class="visit__grid">
+        <address>
+          <a href={MAP_URL}>500-224 Esplanade St West, North Vancouver, B.C</a><br />
+          Lobby and clinic are on 5th floor.
+        </address>
+        <div class="visit__details">
+          <p>Guest parking is behind the building in Stalls #13 and #14 only.</p>
+          <p>
+            <a href={PHONE_SMS}>{PHONE}</a> – Text Only<br />
+            <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="visit__ridge"><Ridgeline lines={5} /></div>
+  </section>
+</Base>
+
+<style>
+  /* Hero: cedar panel and photo side by side, the ridgeline crossing the seam. */
+  .hero {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: min(46rem, calc(100svh - 5rem));
+    background: var(--cedar);
+    overflow: hidden;
+  }
+  .hero__panel {
+    display: flex;
+    align-items: center;
+    padding: 4rem var(--gutter) 11rem max(var(--gutter), calc((100vw - 82rem) / 2 + var(--gutter)));
+    color: var(--cream);
+  }
+  .hero__copy {
+    max-width: 32rem;
+  }
+  .hero h1 {
+    font-size: clamp(2.75rem, 5.4vw, 5rem);
+    margin: 1.5rem 0 2.75rem;
+  }
+  .hero__photo {
+    position: relative;
+  }
+  .hero__photo img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 40%;
+    display: block;
+  }
+  .hero__ridge {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: clamp(2rem, 5vw, 4.5rem);
+    color: var(--cream);
+    pointer-events: none;
+  }
+
+  .offer,
+  .rates {
+    padding-block: var(--section);
+  }
+  .offer__grid {
+    display: grid;
+    grid-template-columns: 7fr 4fr;
+    gap: 3rem clamp(3rem, 8vw, 8rem);
+    align-items: start;
+  }
+  .display {
+    font-family: var(--serif);
+    font-size: clamp(3rem, 6.5vw, 5.75rem);
+    font-weight: 400;
+    line-height: 0.98;
+    letter-spacing: -0.015em;
+    color: var(--cedar);
+    margin: 0 0 2.5rem;
+    max-width: 11ch;
+  }
+  .offer__body {
+    max-width: 36rem;
+    margin: 0;
+  }
+  .focus {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--rule);
+  }
+  .focus li {
+    font-family: var(--serif);
+    font-size: clamp(1.5rem, 2.2vw, 1.875rem);
+    color: var(--cedar);
+    padding: 0.85rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .about {
+    background: var(--sand);
+    padding-block: var(--section);
+  }
+  .about__grid {
+    display: grid;
+    grid-template-columns: 5fr 6fr;
+    gap: 3rem clamp(3rem, 8vw, 8rem);
+    align-items: center;
+  }
+  .about__photo {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    display: block;
+  }
+  .lead {
+    font-family: var(--serif);
+    font-size: clamp(1.75rem, 3vw, 2.625rem);
+    line-height: 1.2;
+    color: var(--cedar);
+    margin: 0 0 2.5rem;
+    max-width: 30ch;
+  }
+
+  .rates__grid {
+    display: grid;
+    grid-template-columns: 7fr 4fr;
+    gap: 3rem clamp(3rem, 8vw, 8rem);
+    align-items: start;
+  }
+  .rates__table {
+    margin: 0;
+    border-top: 1px solid var(--rule);
+  }
+  .rates__table div {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .rates__table dt {
+    font-family: var(--serif);
+    font-size: clamp(1.5rem, 2.4vw, 2rem);
+    color: var(--cedar);
+  }
+  .rates__table dd {
+    margin: 0;
+    font-size: 1.0625rem;
+    letter-spacing: 0.02em;
+  }
+  .rates__aside {
+    padding-left: clamp(0rem, 4vw, 3.5rem);
+    border-left: 1px solid var(--rule);
+  }
+  .rates__aside p {
+    font-size: 0.9375rem;
+    margin: 1.5rem 0 0;
+    color: color-mix(in srgb, var(--ink) 80%, transparent);
+  }
+
+  .visit {
+    position: relative;
+    padding: var(--section) 0 clamp(8rem, 15vw, 13rem);
+    border-top: 1px solid var(--rule);
+    overflow: hidden;
+  }
+  .visit__grid {
+    display: grid;
+    grid-template-columns: 7fr 4fr;
+    gap: 2rem clamp(3rem, 8vw, 8rem);
+  }
+  .visit address {
+    font-style: normal;
+    font-family: var(--serif);
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    line-height: 1.25;
+    color: var(--cedar);
+  }
+  .visit address a {
+    color: inherit;
+    text-decoration-color: var(--rule);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+  .visit__details p {
+    margin: 0 0 1.25rem;
+  }
+  .visit__ridge {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -2px;
+    color: var(--moss);
+    opacity: 0.45;
+    pointer-events: none;
+  }
+
+  @media (max-width: 860px) {
+    .hero {
+      grid-template-columns: 1fr;
+      min-height: 0;
+    }
+    .hero__panel {
+      padding: 4.5rem var(--gutter) 5rem;
+    }
+    .hero__photo {
+      aspect-ratio: 4 / 3;
+    }
+    .hero__ridge {
+      bottom: auto;
+      top: calc(100% - (100vw * 0.75) - 4rem);
+    }
+    .offer__grid,
+    .about__grid,
+    .rates__grid,
+    .visit__grid {
+      grid-template-columns: 1fr;
+    }
+    .rates__aside {
+      padding-left: 0;
+      border-left: 0;
+    }
+  }
+</style>

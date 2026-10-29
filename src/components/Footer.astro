@@ -1,0 +1,104 @@
+---
+import Logo from "../../brand/logo/logo-horizontal-cream.svg";
+import Mark from "../../brand/logo/mark-cream.svg";
+import { EMAIL, MAP_URL, NAV, PHONE, PHONE_SMS } from "../site";
+---
+
+<footer class="site-footer">
+  <Mark class="site-footer__mark" aria-hidden="true" role="presentation" />
+  <div class="container site-footer__grid">
+    <div>
+      <a href="/" class="site-footer__logo"><Logo /></a>
+      <ul class="site-footer__nav">
+        {NAV.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+      </ul>
+    </div>
+    <div class="site-footer__ack">
+      <p>
+        We respectfully acknowledge that we work and recreate on the traditional, ancestral, and unceded
+        territories of the Coast Salish peoples, specifically the lands of the <strong>Sḵwx̱wú7mesh Nation</strong>,
+        the <strong>Tsleil-Waututh Nation</strong>, and the <strong>Musqueam Nation</strong>.
+      </p>
+      <p>
+        We honor and express our gratitude to these Nations for their ongoing stewardship and deep connection to
+        these lands, waters, and communities. We recognize the long history that has brought us to reside on this
+        territory and are committed to learning from and supporting Indigenous voices in our community.
+      </p>
+    </div>
+    <div class="site-footer__contact">
+      <h2 class="eyebrow">Location</h2>
+      <p><a href={MAP_URL}>500-224 Esplanade St West</a><br />North Vancouver, B.C</p>
+      <h2 class="eyebrow">Contact</h2>
+      <p>
+        <a href={`mailto:${EMAIL}`}>{EMAIL}</a><br />
+        <a href={PHONE_SMS}>{PHONE}</a> – Text Only
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    position: relative;
+    overflow: hidden;
+    background: var(--cedar);
+    color: var(--cream);
+    padding: clamp(4rem, 8vw, 6.5rem) 0 4rem;
+    font-size: 0.9375rem;
+  }
+  .site-footer__mark {
+    position: absolute;
+    left: -8rem;
+    bottom: -12rem;
+    width: 34rem;
+    height: auto;
+    opacity: 0.07;
+    pointer-events: none;
+  }
+  .site-footer__grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: 4fr 5fr 3fr;
+    gap: 3rem 4rem;
+  }
+  .site-footer__logo :global(svg) {
+    width: 15rem;
+    height: auto;
+  }
+  .site-footer__nav {
+    list-style: none;
+    padding: 0;
+    margin: 2rem 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.75rem;
+  }
+  .site-footer a {
+    color: inherit;
+  }
+  .site-footer__nav a {
+    text-decoration: none;
+  }
+  .site-footer__ack p {
+    margin: 0 0 1em;
+    line-height: 1.7;
+    color: color-mix(in srgb, var(--cream) 82%, transparent);
+  }
+  .site-footer__ack strong {
+    font-weight: 500;
+    color: var(--cream);
+  }
+  .site-footer__contact .eyebrow {
+    color: color-mix(in srgb, var(--cream) 65%, transparent);
+    margin-bottom: 0.5rem;
+  }
+  .site-footer__contact p {
+    margin: 0 0 1.75rem;
+    line-height: 1.7;
+  }
+  @media (max-width: 960px) {
+    .site-footer__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

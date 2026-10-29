@@ -1,0 +1,108 @@
+---
+import Logo from "../../brand/logo/logo-horizontal-cedar.svg";
+import { BOOKING_URL, NAV } from "../site";
+---
+
+<header class="site-header">
+  <div class="container site-header__inner">
+    <a href="/" class="site-header__logo"><Logo /></a>
+    <nav aria-label="Main">
+      <ul class="site-header__nav">
+        {NAV.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+      </ul>
+    </nav>
+    <a class="button" href={BOOKING_URL}>Book now</a>
+    <details class="site-header__menu">
+      <summary>Menu</summary>
+      <ul>
+        {NAV.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+      </ul>
+    </details>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: color-mix(in srgb, var(--cream) 92%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--rule);
+  }
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    gap: 2.5rem;
+    height: 5rem;
+  }
+  .site-header__logo {
+    margin-right: auto;
+    line-height: 0;
+  }
+  .site-header__logo :global(svg) {
+    height: 2.75rem;
+    width: auto;
+  }
+  .site-header__nav {
+    display: flex;
+    gap: 2.25rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .site-header__nav a,
+  .site-header__menu a {
+    color: var(--ink);
+    text-decoration: none;
+    font-size: 0.9375rem;
+    letter-spacing: 0.02em;
+  }
+  .site-header__nav a:hover {
+    color: var(--moss);
+  }
+  .site-header__menu {
+    display: none;
+    position: relative;
+  }
+  .site-header__menu summary {
+    cursor: pointer;
+    list-style: none;
+    font-size: 0.9375rem;
+  }
+  .site-header__menu summary::-webkit-details-marker {
+    display: none;
+  }
+  .site-header__menu ul {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 1.25rem);
+    margin: 0;
+    padding: 1rem 1.5rem;
+    list-style: none;
+    background: var(--cream);
+    border: 1px solid var(--rule);
+    display: grid;
+    gap: 0.75rem;
+    min-width: 10rem;
+  }
+  @media (max-width: 860px) {
+    .site-header__inner {
+      gap: 1.25rem;
+      height: 4.25rem;
+    }
+    .site-header__logo :global(svg) {
+      height: 2.25rem;
+    }
+    .button {
+      padding: 0.55rem 1.1rem;
+      font-size: 0.875rem;
+    }
+    nav {
+      display: none;
+    }
+    .site-header__menu {
+      display: block;
+    }
+  }
+</style>
