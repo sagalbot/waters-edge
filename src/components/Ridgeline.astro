@@ -1,7 +1,7 @@
 ---
 // The skyline contour lines (see src/ridge.ts). Rendered still on the server; a single
-// clock animates every ridgeline on the page. An optional fill under the ridge (shown
-// only where a hero turns it on) lets a panel rise into a photo.
+// clock animates every ridgeline on the page. An optional fill under the ridge lets a
+// panel rise into a photo; its opacity comes from --ridge-fill (see styles/global.css).
 import { contourPath, fillPath } from "../ridge";
 
 interface Props {
@@ -21,14 +21,24 @@ const paths = Array.from({ length: lines }, (_, k) => contourPath(k));
 
   // Time is shared by every ridgeline, so the hero ridge (which persists across
   // navigations) never jumps. Each ridgeline eases its swell in from stillness the
-  // first time it appears, so nothing pops.
+  // first time it appears, so nothing pops. Ridgelines out of view are not redrawn.
   const born = new Map<SVGSVGElement, number>();
+  const visible = new Set<SVGSVGElement>();
+  const seen = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      const svg = e.target as SVGSVGElement;
+      if (e.isIntersecting) visible.add(svg);
+      else visible.delete(svg);
+    }
+  });
   const still = matchMedia("(prefers-reduced-motion: reduce)");
 
   function collect() {
     const now = performance.now();
     document.querySelectorAll<SVGSVGElement>("svg.ridgeline").forEach((svg) => {
-      if (!born.has(svg)) born.set(svg, now);
+      if (born.has(svg)) return;
+      born.set(svg, now);
+      seen.observe(svg);
     });
   }
 
@@ -37,12 +47,14 @@ const paths = Array.from({ length: lines }, (_, k) => contourPath(k));
     for (const [svg, start] of born) {
       if (!svg.isConnected) {
         born.delete(svg);
+        visible.delete(svg);
+        seen.unobserve(svg);
         continue;
       }
-      const p = Math.min(1, (now - start) / 4000);
+      if (!visible.has(svg)) continue;
+      const p = Math.min(1, (now - start) / 3000);
       const swell = p * p * (3 - 2 * p);
-      const lines = svg.querySelectorAll("path.ridge-line");
-      lines.forEach((path, k) => {
+      svg.querySelectorAll("path.ridge-line").forEach((path, k) => {
         const d = contourPath(k, t, swell);
         path.setAttribute("d", d);
         if (k === 0) svg.querySelector("path.ridge-fill")?.setAttribute("d", fillPath(d));
@@ -50,6 +62,24 @@ const paths = Array.from({ length: lines }, (_, k) => contourPath(k));
     }
     requestAnimationFrame(frame);
   }
+
+  // The hero ridge is carried over to the next page, where its fill may differ (the
+  // home hero hides it over the photo on wide screens). Fade between the two during the
+  // page transition rather than switching it on the first frame.
+  document.addEventListener("astro:before-swap", (event) => {
+    const before = new Map<Element, string>();
+    document.querySelectorAll(".ridge-slot .ridge-fill").forEach((f) => before.set(f, getComputedStyle(f).fillOpacity));
+    // Start with the transition's own animations so the two stay in step.
+    event.viewTransition.ready.then(() => {
+      const easing = getComputedStyle(document.documentElement).getPropertyValue("--tide-ease") || "ease";
+      for (const [fill, from] of before) {
+        const to = getComputedStyle(fill).fillOpacity;
+        if (fill.isConnected && from !== to && !still.matches) {
+          fill.animate({ fillOpacity: [from, to] }, { duration: 900, easing });
+        }
+      }
+    }, () => {});
+  });
 
   document.addEventListener("astro:page-load", collect);
   if (!still.matches) requestAnimationFrame(frame);
@@ -66,12 +96,12 @@ const paths = Array.from({ length: lines }, (_, k) => contourPath(k));
     stroke-linecap: round;
   }
   .ridge-line {
-    stroke-width: calc(1.5px - var(--k) * 0.25px);
-    opacity: calc(1 - var(--k) * 0.22);
+    stroke-width: calc(1.5px - var(--k) * 0.2px);
+    opacity: calc(1 - var(--k) * 0.18);
   }
   .ridge-fill {
-    display: none;
     fill: var(--cedar);
     stroke: none;
+    fill-opacity: var(--ridge-fill, 0);
   }
 </style>

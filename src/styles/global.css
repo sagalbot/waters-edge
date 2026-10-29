@@ -14,6 +14,14 @@
   --gutter: clamp(1.25rem, 4vw, 3.5rem);
   --section: clamp(5rem, 11vw, 9.5rem);
   --ridge-inset: clamp(2rem, 5vw, 4.5rem);
+
+  /* The page-transition tide: a slow ease in and out that comes fully to rest at 80% of
+     its duration and holds. However few frames a busy device paints during the
+     transition, its last one already shows the settled page, so nothing snaps when the
+     transition ends. */
+  --tide-ease: linear(0, 0.0033 5%, 0.0145 10%, 0.0358 15%, 0.0708 20%, 0.1252 25%, 0.2081 30%,
+    0.3324 35%, 0.5 40%, 0.6676 45%, 0.7919 50%, 0.8748 55%, 0.9292 60%, 0.9642 65%,
+    0.9855 70%, 0.9967 75%, 1 80%, 1);
 }
 
 *,
@@ -166,6 +174,14 @@ summary:focus-visible {
   bottom: var(--ridge-inset);
   color: var(--cream);
   pointer-events: none;
+  /* The cedar fill under the ridge is invisible on a cedar band, and lets the home
+     panel rise into its photo on phones. */
+  --ridge-fill: 1;
+}
+@media (min-width: 861px) {
+  .hero .ridge-slot {
+    --ridge-fill: 0;
+  }
 }
 @media (max-width: 860px) {
   /* Crop to a stretch of the skyline so the peaks keep their shape on a phone. */
@@ -179,9 +195,6 @@ summary:focus-visible {
     bottom: auto;
     top: 50vw;
   }
-  .hero .ridge-slot .ridge-fill {
-    display: block;
-  }
 }
 
 /* Page transitions (see src/transitions.ts). Everything shares one slow tide. */
@@ -190,12 +203,20 @@ summary:focus-visible {
 ::view-transition-group(hero-title),
 ::view-transition-group(hero-eyebrow) {
   animation-duration: 900ms;
-  animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+  animation-timing-function: var(--tide-ease);
 }
 ::view-transition-old(root),
 ::view-transition-new(root) {
   animation-duration: 600ms;
   animation-timing-function: ease;
+}
+/* A hero off screen at either end: no hero tide, just the page crossfade, and the
+   jump to a #section is instant rather than a scroll under the fade. */
+html[data-hero-away] {
+  scroll-behavior: auto;
+}
+html[data-hero-away] :is(.hero, .page-hero, .ridge-slot, h1, .eyebrow) {
+  view-transition-name: none !important;
 }
 /* The hero is clipped to its changing height, never stretched, and the old and new
    heroes crossfade over solid cedar, so its edge recedes or rises as one clean
@@ -222,6 +243,8 @@ summary:focus-visible {
 ::view-transition-new(hero-eyebrow) {
   mask-image: linear-gradient(90deg, #000 0 40%, transparent 60% 100%);
 }
+/* No filters here: a blur keyframe leaves the settled headline behind a blur(0px)
+   filter layer until the transition ends, and the live text then re-rasterizes. */
 @keyframes washOut {
   from {
     mask-position: 100% 0;
@@ -229,14 +252,12 @@ summary:focus-visible {
   to {
     mask-position: 0 0;
     transform: translateX(1.5rem);
-    filter: blur(4px);
   }
 }
 @keyframes washIn {
   from {
     mask-position: 100% 0;
     transform: translateX(-0.75rem);
-    filter: blur(3px);
   }
   to {
     mask-position: 0 0;
@@ -256,6 +277,12 @@ summary:focus-visible {
   from,
   to {
     opacity: 1;
+  }
+}
+@keyframes tideGone {
+  from,
+  to {
+    opacity: 0;
   }
 }
 

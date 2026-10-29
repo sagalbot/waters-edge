@@ -10,3 +10,22 @@ import { ridge } from "../transitions";
 <div class="ridge-slot" transition:name="ridge" transition:persist="ridge" transition:animate={ridge}>
   <Ridgeline />
 </div>
+
+<script>
+  // The hero tide only makes sense when both heroes are on screen. Leaving a page
+  // scrolled past its hero, or arriving at a section further down (/services#anxiety),
+  // a hero would slide in from off screen over a page already in place, so the pages
+  // just crossfade instead (see [data-hero-away] in global.css). Flagged on both
+  // documents and cleared once the transition ends.
+  let away = false;
+  document.addEventListener("astro:before-preparation", (event) => {
+    const hero = document.querySelector(".hero, .page-hero");
+    away = (!!hero && hero.getBoundingClientRect().top < -40) || event.to.hash !== "";
+    document.documentElement.toggleAttribute("data-hero-away", away);
+  });
+  document.addEventListener("astro:before-swap", (event) => {
+    if (!away) return;
+    event.newDocument.documentElement.setAttribute("data-hero-away", "");
+    event.viewTransition.finished.finally(() => document.documentElement.removeAttribute("data-hero-away"));
+  });
+</script>
