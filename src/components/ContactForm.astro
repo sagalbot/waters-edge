@@ -1,15 +1,18 @@
 ---
-// The current site's Name / Email / Message form. There is no form backend yet, so it
-// opens the visitor's email app addressed to Alexis.
+// The current site's Name / Email / Message form. It posts to the Worker (worker.ts),
+// which checks Turnstile and emails Alexis. The site key is public; without
+// PUBLIC_TURNSTILE_SITE_KEY at build time it falls back to Cloudflare's always-pass
+// test key, which the production secret rejects.
 import { EMAIL } from "../site";
 
 interface Props {
   submit: string;
 }
 const { submit } = Astro.props;
+const sitekey = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY ?? "1x00000000000000000000AA";
 ---
 
-<form class="contact-form" action={`mailto:${EMAIL}`} method="post" enctype="text/plain">
+<form class="contact-form" action="/api/contact" method="post" data-email={EMAIL}>
   <label>
     <span>Name</span>
     <input name="name" autocomplete="name" required />
@@ -22,8 +25,82 @@ const { submit } = Astro.props;
     <span>Message</span>
     <textarea name="message" rows="6" required></textarea>
   </label>
+  <div class="contact-form__check" data-sitekey={sitekey}></div>
   <button class="button" type="submit">{submit}</button>
+  <p class="contact-form__status" role="status"></p>
 </form>
+
+<script>
+  // Turnstile is rendered explicitly: the ClientRouter swaps pages without reloading,
+  // so its automatic rendering would only run on a full page load.
+  declare const turnstile: {
+    render(el: HTMLElement, options: Record<string, string | (() => void)>): string;
+    reset(id: string): void;
+    remove(id: string): void;
+  };
+
+  let loaded: Promise<void> | undefined;
+  const loadTurnstile = () =>
+    (loaded ??= new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+      script.onload = () => resolve();
+      script.onerror = () => {
+        loaded = undefined;
+        reject();
+      };
+      document.head.append(script);
+    }));
+
+  let widget: string | undefined;
+  document.addEventListener("astro:before-swap", () => {
+    if (widget) turnstile.remove(widget);
+    widget = undefined;
+  });
+
+  document.addEventListener("astro:page-load", async () => {
+    const form = document.querySelector<HTMLFormElement>(".contact-form");
+    if (!form) return;
+    const check = form.querySelector<HTMLElement>(".contact-form__check")!;
+    const status = form.querySelector<HTMLElement>(".contact-form__status")!;
+    const button = form.querySelector<HTMLButtonElement>("button")!;
+    const fallback = `Sorry, your message didn't send. Please email us at ${form.dataset.email}.`;
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      button.disabled = true;
+      status.textContent = "Sending…";
+      const response = await fetch(form.action, { method: "POST", body: new FormData(form) }).catch(() => null);
+      if (response?.ok) {
+        form.reset();
+        status.textContent = "Thank you. Your message has been sent, and we'll be in touch soon.";
+      } else if (response?.status === 403) {
+        status.textContent = "We couldn't confirm you're not a bot. Please try again.";
+      } else {
+        status.textContent = fallback;
+      }
+      if (widget) turnstile.reset(widget);
+      button.disabled = false;
+    });
+
+    try {
+      await loadTurnstile();
+    } catch {
+      status.textContent = fallback;
+      return;
+    }
+    // The check runs in the background; the widget only appears if Cloudflare needs the visitor to click.
+    if (document.contains(check)) {
+      widget = turnstile.render(check, {
+        sitekey: check.dataset.sitekey!,
+        appearance: "interaction-only",
+        size: "flexible",
+        theme: "light",
+        "before-interactive-callback": () => check.classList.add("is-visible"),
+      });
+    }
+  });
+</script>
 
 <style>
   .contact-form {
@@ -61,5 +138,20 @@ const { submit } = Astro.props;
     border: 0;
     cursor: pointer;
     margin-top: 0.5rem;
+  }
+  button:disabled {
+    opacity: 0.6;
+    cursor: progress;
+  }
+  /* Out of the grid (no gap) until Turnstile needs the visitor; not display: none, so it still runs. */
+  .contact-form__check:not(.is-visible) {
+    position: absolute;
+  }
+  .contact-form__status {
+    margin: 0;
+    color: var(--cedar);
+  }
+  .contact-form__status:empty {
+    display: none;
   }
 </style>

@@ -3,3 +3,4 @@ dist/
 .astro/
 .amp/portals/*
 .amp/in/
+.wrangler/

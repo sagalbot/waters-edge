@@ -1,7 +1,14 @@
 {
   "name": "waters-edge",
   "compatibility_date": "2026-10-29",
+  "main": "worker.ts",
   "assets": {
     "directory": "./dist"
+  },
+  // Contact form email (see worker.ts). TURNSTILE_SECRET is a secret: `npx wrangler secret put TURNSTILE_SECRET`.
+  "send_email": [{ "name": "CONTACT_EMAIL" }],
+  "vars": {
+    "CONTACT_FROM": "contact@waters-edge.sagalbot.com",
+    "CONTACT_TO": "alexispenner.rmt@gmail.com"
   }
 }
