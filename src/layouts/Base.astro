@@ -4,6 +4,7 @@ import { ClientRouter } from "astro:transitions";
 import { Font } from "astro:assets";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
+import MobileMenu from "../components/MobileMenu.astro";
 import favicon from "../../brand/logo/favicon.svg?url";
 import favicon32 from "../../brand/logo/favicon-32.png?url";
 import appleTouch from "../../brand/logo/apple-touch-icon.png?url";
@@ -38,5 +39,6 @@ const { title, description } = Astro.props;
       <slot />
     </main>
     <Footer />
+    <MobileMenu />
   </body>
 </html>

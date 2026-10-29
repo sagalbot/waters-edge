@@ -1,0 +1,210 @@
+---
+// Phone navigation: a cedar drawer that slides in from the right, opened by the toggle in
+// Header.astro. It sits at the end of <body> so that, when a link is tapped, its view
+// transition snapshot slides away above the page transition (see styles/global.css).
+import { NAV } from "../site";
+import { edgePath } from "../menu-shapes";
+
+const current = (href: string) => (Astro.url.pathname.replace(/\/$/, "") === href ? "page" : undefined);
+---
+
+<div class="menu">
+  <div class="menu__scrim" data-menu-close></div>
+  <div class="menu__panel" id="menu-drawer" role="dialog" aria-modal="true" aria-label="Menu" inert>
+    <svg class="menu__edge" viewBox="0 0 40 100" preserveAspectRatio="none" aria-hidden="true">
+      <path d={edgePath()}></path>
+    </svg>
+    <nav aria-label="Mobile">
+      <ul>
+        {
+          NAV.map((l, i) => (
+            <li style={`--i:${i}`}>
+              <a href={l.href} aria-current={current(l.href)}>{l.label}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</div>
+
+<script>
+  import { edgePath, toggleLine } from "../menu-shapes";
+
+  const still = matchMedia("(prefers-reduced-motion: reduce)");
+  const wide = matchMedia("(min-width: 861px)");
+  let open = false;
+  let togglePos = 0;
+  const frames = new Map<string, number>();
+
+  // Run frame(k) for k from 0 to 1 over ms, replacing any earlier run with the same key.
+  function tween(key: string, ms: number, frame: (k: number) => void) {
+    cancelAnimationFrame(frames.get(key) ?? 0);
+    if (still.matches) return frame(1);
+    const t0 = performance.now();
+    const step = (now: number) => {
+      const k = Math.min(1, (now - t0) / ms);
+      frame(k);
+      if (k < 1) frames.set(key, requestAnimationFrame(step));
+    };
+    frames.set(key, requestAnimationFrame(step));
+  }
+
+  function animateToggle(target: number) {
+    const toggle = document.querySelector(".menu-toggle");
+    const [a, b] = toggle?.querySelectorAll("path") ?? [];
+    const from = togglePos;
+    tween("toggle", 650 * Math.abs(target - from), (k) => {
+      togglePos = from + (target - from) * k;
+      a?.setAttribute("d", toggleLine(-1, togglePos));
+      b?.setAttribute("d", toggleLine(1, togglePos));
+    });
+  }
+
+  function setOpen(next: boolean, navigating = false) {
+    open = next;
+    const toggle = document.querySelector<HTMLButtonElement>(".menu-toggle");
+    toggle?.setAttribute("aria-expanded", String(next));
+    toggle?.setAttribute("aria-label", next ? "Close menu" : "Menu");
+    animateToggle(next ? 1 : 0);
+    // A tapped link leaves the drawer open and names it for the page transition, which
+    // slides its snapshot away (styles/global.css). The name is only set now: on an open,
+    // resting drawer Chromium paints a translucent band over its curved edge.
+    if (navigating) {
+      document.querySelector(".menu")?.setAttribute("data-leaving", "");
+      return;
+    }
+
+    const menu = document.querySelector<HTMLElement>(".menu");
+    const panel = document.querySelector<HTMLElement>(".menu__panel");
+    if (!menu || !panel) return;
+    menu.toggleAttribute("data-open", next);
+    panel.inert = !next;
+    document.documentElement.classList.toggle("menu-open", next);
+    document.querySelectorAll<HTMLElement>("main, footer").forEach((el) => (el.inert = next));
+    const edge = panel.querySelector(".menu__edge path");
+    tween("edge", 900, (k) => edge?.setAttribute("d", edgePath(k)));
+    if (next) panel.querySelector("a")?.focus({ preventScroll: true });
+    else if (panel.contains(document.activeElement)) toggle?.focus({ preventScroll: true });
+  }
+
+  document.addEventListener("click", (e) => {
+    const target = e.target as Element;
+    if (target.closest(".menu-toggle")) setOpen(!open);
+    else if (target.closest("[data-menu-close]")) setOpen(false);
+    else if (open && target.closest(".menu a") && !(e.metaKey || e.ctrlKey || e.shiftKey || e.altKey)) {
+      setOpen(false, true);
+    }
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && open) setOpen(false);
+  });
+  wide.addEventListener("change", () => wide.matches && open && setOpen(false));
+  // The new page arrives with the drawer closed.
+  document.addEventListener("astro:after-swap", () => (open = false));
+</script>
+
+<style>
+  /* Phones only; the drawer opens below the header (4.25rem tall there, see Header.astro). */
+  .menu {
+    --top: calc(4.25rem + 1px);
+    visibility: hidden;
+    transition: visibility 0s linear 650ms;
+  }
+  .menu[data-open] {
+    visibility: visible;
+    transition-delay: 0s;
+  }
+  @media (min-width: 861px) {
+    .menu {
+      display: none;
+    }
+  }
+  .menu__scrim {
+    position: fixed;
+    inset: var(--top) 0 0 0;
+    z-index: 9;
+    background: rgb(20 30 24 / 0.45);
+    opacity: 0;
+    transition: opacity 500ms ease;
+  }
+  .menu__panel {
+    position: fixed;
+    top: var(--top);
+    right: 0;
+    bottom: 0;
+    z-index: 9;
+    width: min(70vw, 19rem);
+    padding: clamp(2rem, 8vh, 4rem) var(--gutter) 2rem 1.5rem;
+    background: var(--cedar);
+    color: var(--cream);
+    transform: translateX(calc(100% + 2.5rem));
+    transition: transform 650ms var(--tide-ease);
+  }
+  .menu[data-open] .menu__scrim {
+    opacity: 1;
+  }
+  .menu[data-open] .menu__panel {
+    transform: none;
+  }
+  .menu[data-leaving] .menu__scrim {
+    view-transition-name: menu-scrim;
+  }
+  .menu[data-leaving] .menu__panel {
+    view-transition-name: menu-drawer;
+  }
+  .menu__edge {
+    position: absolute;
+    top: 0;
+    left: calc(-2.5rem + 1px);
+    width: 2.5rem;
+    height: 100%;
+    fill: var(--cedar);
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  li {
+    border-bottom: 1px solid color-mix(in srgb, var(--cream) 18%, transparent);
+    opacity: 0;
+    transform: translateX(1.25rem);
+    transition:
+      opacity 200ms ease,
+      transform 200ms ease;
+  }
+  /* Links drift in one after another, quickly enough to tap straight away. */
+  .menu[data-open] li {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 450ms ease calc(120ms + var(--i) * 50ms),
+      transform 550ms var(--tide-ease) calc(120ms + var(--i) * 50ms);
+  }
+  a {
+    display: block;
+    padding: 1rem 0;
+    font-family: var(--serif);
+    font-size: clamp(2.25rem, 9vw, 2.75rem);
+    line-height: 1.1;
+    color: var(--cream);
+    text-decoration: none;
+  }
+  a[aria-current="page"] {
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.3em;
+  }
+  a:focus-visible {
+    outline-color: var(--cream);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .menu__scrim,
+    .menu__panel,
+    li,
+    .menu[data-open] li {
+      transition: none;
+    }
+  }
+</style>

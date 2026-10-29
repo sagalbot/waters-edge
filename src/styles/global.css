@@ -280,6 +280,22 @@ html[data-hero-away] :is(.hero, .page-hero, .ridge-slot, h1, .eyebrow) {
     mask-position: 0 0;
   }
 }
+/* A link tapped in the mobile drawer: the open drawer's snapshot slides away while the
+   page transition plays underneath (see components/MobileMenu.astro). */
+::view-transition-old(menu-drawer) {
+  animation: drawerOut 700ms var(--tide-ease) both;
+}
+::view-transition-old(menu-scrim) {
+  animation: tideOut 600ms ease both;
+}
+@keyframes drawerOut {
+  to {
+    transform: translateX(calc(100% + 2.5rem));
+  }
+}
+html.menu-open {
+  overflow: hidden;
+}
 @keyframes tideOut {
   to {
     opacity: 0;
