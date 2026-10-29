@@ -13,7 +13,13 @@
 
   --gutter: clamp(1.25rem, 4vw, 3.5rem);
   --section: clamp(5rem, 11vw, 9.5rem);
+  /* Hero ridgeline geometry (see .ridge-slot). The ridge sits --ridge-inset above the
+     hero's bottom edge and stands --ridge-h tall; its highest crest, waves included,
+     reaches 76% of that height. Hero copy keeps --ridge-gap clear of the crest. */
   --ridge-inset: clamp(2rem, 5vw, 4.5rem);
+  --ridge-h: clamp(9.5rem, 15.3vw, 15rem);
+  --ridge-rise: calc(var(--ridge-inset) + var(--ridge-h) * 0.76);
+  --ridge-gap: clamp(3.25rem, 5vw, 4.75rem);
 
   /* The page-transition tide: a slow ease in and out that comes fully to rest at 80% of
      its duration and holds. However few frames a busy device paints during the
@@ -22,6 +28,13 @@
   --tide-ease: linear(0, 0.0033 5%, 0.0145 10%, 0.0358 15%, 0.0708 20%, 0.1252 25%, 0.2081 30%,
     0.3324 35%, 0.5 40%, 0.6676 45%, 0.7919 50%, 0.8748 55%, 0.9292 60%, 0.9642 65%,
     0.9855 70%, 0.9967 75%, 1 80%, 1);
+}
+@media (max-width: 860px) {
+  :root {
+    /* The phone ridge is a 250%-wide crop of the skyline, so it stands taller. */
+    --ridge-h: min(38vw, 13.75rem);
+    --ridge-gap: 3.25rem;
+  }
 }
 
 *,
@@ -177,6 +190,9 @@ summary:focus-visible {
   /* The cedar fill under the ridge is invisible on a cedar band, and lets the home
      panel rise into its photo on phones. */
   --ridge-fill: 1;
+}
+.ridge-slot svg.ridgeline {
+  height: var(--ridge-h);
 }
 @media (min-width: 861px) {
   .hero .ridge-slot {

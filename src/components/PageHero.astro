@@ -25,13 +25,8 @@ const { eyebrow, title } = Astro.props;
     overflow: hidden;
     background: var(--cedar);
     color: var(--cream);
-    padding: clamp(4rem, 9vw, 7rem) 0 calc(clamp(6rem, 11vw, 9rem) + var(--ridge-inset));
-  }
-  @media (max-width: 860px) {
-    /* The phone ridge is cropped wider, so it stands taller (see global.css). */
-    .page-hero {
-      padding-bottom: calc(var(--ridge-inset) + 32vw + 1rem);
-    }
+    /* Room below the headline for the ridge and its waves (see global.css). */
+    padding: clamp(4rem, 9vw, 7rem) 0 calc(var(--ridge-rise) + var(--ridge-gap));
   }
   h1 {
     font-size: clamp(2.75rem, 6vw, 5.25rem);

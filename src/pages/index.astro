@@ -146,7 +146,8 @@ const focus = (await getCollection("focus")).sort((a, b) => a.data.order - b.dat
   .hero__panel {
     display: flex;
     align-items: center;
-    padding: 4rem var(--gutter) 11rem max(var(--gutter), calc((100vw - 82rem) / 2 + var(--gutter)));
+    padding: 4rem var(--gutter) calc(var(--ridge-rise) + var(--ridge-gap))
+      max(var(--gutter), calc((100vw - 82rem) / 2 + var(--gutter)));
     color: var(--cream);
   }
   .hero__copy {
@@ -316,8 +317,10 @@ const focus = (await getCollection("focus")).sort((a, b) => a.data.order - b.dat
       grid-template-columns: 1fr;
       min-height: 0;
     }
+    /* The ridge hangs from 50vw over the 80vw-tall photo; its lowest waves reach 95%
+       of its height. Keep the copy clear of them. */
     .hero__panel {
-      padding: 2.5rem var(--gutter) 4rem;
+      padding: max(2.5rem, calc(var(--ridge-h) * 0.95 - 30vw + var(--ridge-gap))) var(--gutter) 4rem;
     }
     .hero__photo {
       order: -1;
