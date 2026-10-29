@@ -8,8 +8,9 @@
   --clay: #c98468;
   --rule: color-mix(in srgb, var(--cedar) 18%, transparent);
 
-  --serif: "Cormorant Garamond Variable", "Cormorant Garamond", Georgia, serif;
-  --sans: "Jost Variable", "Jost", system-ui, sans-serif;
+  /* Defined by the fonts config in astro.config.mjs, with metric-matched fallbacks. */
+  --serif: var(--font-serif);
+  --sans: var(--font-sans);
 
   --gutter: clamp(1.25rem, 4vw, 3.5rem);
   --section: clamp(5rem, 11vw, 9.5rem);

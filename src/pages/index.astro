@@ -21,7 +21,7 @@ const focus = (await getCollection("focus")).sort((a, b) => a.data.order - b.dat
     <div class="hero__panel">
       <div class="hero__copy">
         <p class="eyebrow" transition:name="hero-eyebrow" transition:animate={wash}>North Vancouver, B.C</p>
-        <h1 transition:name="hero-title" transition:animate={wash}>Water’s Edge Massage Therapy</h1>
+        <h1 transition:name="hero-title" transition:animate={wash}>Water’s Edge<br /> Massage Therapy</h1>
         <a class="button" href={BOOKING_URL}>Book</a>
       </div>
     </div>
@@ -151,7 +151,7 @@ const focus = (await getCollection("focus")).sort((a, b) => a.data.order - b.dat
     color: var(--cream);
   }
   .hero__copy {
-    max-width: 32rem;
+    max-width: 36rem;
   }
   .hero h1 {
     font-size: clamp(2.75rem, 5.4vw, 5rem);
