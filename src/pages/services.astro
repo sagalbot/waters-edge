@@ -11,8 +11,6 @@ const focus = await Promise.all(
     .map(async (f) => ({
       ...f,
       Content: (await render(f)).Content,
-      // Placeholder files hold only an HTML comment until Alexis writes the text.
-      written: (f.body ?? "").replace(/<!--[\s\S]*?-->/g, "").trim() !== "",
     })),
 );
 ---
@@ -53,10 +51,13 @@ const focus = await Promise.all(
     <h2 id="focus-title" class="eyebrow">Focus Areas</h2>
     <ul>
       {
-        focus.map(({ id, data, Content, written }) => (
+        focus.map(({ id, data, Content }) => (
           <li id={id}>
-            <h3>{data.title}</h3>
-            {written && <div class="focus__body"><Content /></div>}
+            <h3>
+              {data.title}
+              {data.subtitle && <span class="focus__subtitle">{data.subtitle}</span>}
+            </h3>
+            <div class="focus__body"><Content /></div>
           </li>
         ))
       }
@@ -120,6 +121,15 @@ const focus = await Promise.all(
   .focus h3 {
     font-size: clamp(1.5rem, 2.4vw, 2rem);
     color: var(--cedar);
+  }
+  .focus__subtitle {
+    display: block;
+    margin-top: 0.5rem;
+    font-family: var(--sans);
+    font-size: 0.75rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink);
   }
   .focus__body {
     max-width: 38rem;

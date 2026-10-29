@@ -56,7 +56,14 @@ const focus = (await getCollection("focus")).sort((a, b) => a.data.order - b.dat
         </p>
       </div>
       <ul class="focus" aria-label="Focus areas">
-        {focus.map((f) => <li><a href={`/services#${f.id}`}>{f.data.title}</a></li>)}
+        {
+          focus.map((f) => (
+            <li>
+              <a href={`/services#${f.id}`}>{f.data.title}</a>
+              <p>{f.data.summary}</p>
+            </li>
+          ))
+        }
       </ul>
     </div>
   </section>
@@ -195,15 +202,22 @@ const focus = (await getCollection("focus")).sort((a, b) => a.data.order - b.dat
     border-top: 1px solid var(--rule);
   }
   .focus li {
-    font-family: var(--serif);
-    font-size: clamp(1.5rem, 2.2vw, 1.875rem);
+    padding-bottom: 1.25rem;
     border-bottom: 1px solid var(--rule);
+  }
+  .focus p {
+    margin: 0;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: color-mix(in srgb, var(--ink) 80%, transparent);
   }
   .focus a {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    padding: 0.85rem 0;
+    padding: 1.1rem 0 0.4rem;
+    font-family: var(--serif);
+    font-size: clamp(1.5rem, 2.2vw, 1.875rem);
     color: var(--cedar);
     text-decoration: none;
   }
