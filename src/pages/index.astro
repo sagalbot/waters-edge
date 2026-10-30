@@ -49,10 +49,13 @@ const focus = (await getCollection("focus")).sort((a, b) => a.data.order - b.dat
         <p class="offer__body">
           At Water's Edge Massage Therapy in North Vancouver, B.C, we invite you to experience the tranquility and
           restorative power found where land meets water. Just as the water's edge offers a space for reflection and
-          renewal, our practice provides a sanctuary where your body and mind can find balance and healing. Through
-          compassionate, patient-centered massage therapy, we support individuals dealing with anxiety, chronic pain,
-          sports injuries, pregnancy, and TMJ dysfunction, to name a few. Our treatments blend therapeutic techniques
-          with a calming approach, aiming to ease physical discomfort while fostering a sense of safety and relaxation.
+          renewal, our practice provides a sanctuary where your body and mind can find balance and healing.
+        </p>
+        <p class="offer__body">
+          Through compassionate, patient-centered massage therapy, we support individuals dealing with anxiety, chronic
+          pain, sports injuries, pregnancy, and TMJ dysfunction, to name a few. Our treatments blend therapeutic
+          techniques with a calming approach, aiming to ease physical discomfort while fostering a sense of safety and
+          relaxation.
         </p>
       </div>
       <ul class="focus" aria-label="Focus areas">
@@ -195,6 +198,9 @@ const focus = (await getCollection("focus")).sort((a, b) => a.data.order - b.dat
   .offer__body {
     max-width: 36rem;
     margin: 0;
+  }
+  .offer__body + .offer__body {
+    margin-top: 1.25em;
   }
   .focus {
     list-style: none;
