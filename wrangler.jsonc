@@ -2,6 +2,9 @@
   "name": "waters-edge",
   "compatibility_date": "2026-10-29",
   "assets": {
-    "directory": "./dist"
+    "directory": "./dist",
+    // Serve /about from about/index.html directly, matching the site's links, instead of
+    // redirecting to /about/ first.
+    "html_handling": "drop-trailing-slash"
   }
 }
