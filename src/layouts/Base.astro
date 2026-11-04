@@ -8,12 +8,35 @@ import MobileMenu from "../components/MobileMenu.astro";
 import favicon from "../../brand/logo/favicon.svg?url";
 import favicon32 from "../../brand/logo/favicon-32.png?url";
 import appleTouch from "../../brand/logo/apple-touch-icon.png?url";
+import icon512 from "../../brand/logo/icon-512.png?url";
+import ogImage from "../../brand/og-image.jpg?url";
+import { getImage } from "astro:assets";
+import portrait from "../../content/images/IMG_9454.jpg";
+import { NAME } from "../site";
+import { business } from "../schema";
 
 interface Props {
   title: string;
   description: string;
+  /** Extra schema.org nodes for this page, added to the site-wide business node. */
+  schema?: object[];
 }
-const { title, description } = Astro.props;
+const { title, description, schema = [] } = Astro.props;
+const site = Astro.site!;
+const canonical = new URL(Astro.url.pathname, site).href;
+const ogImageUrl = new URL(ogImage, site).href;
+const photo = await getImage({ src: portrait, width: 800, format: "jpg" });
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@graph": [
+    business(site, {
+      image: [ogImageUrl, new URL(photo.src, site).href],
+      logo: new URL(icon512, site).href,
+      photo: new URL(photo.src, site).href,
+    }),
+    ...schema,
+  ],
+};
 ---
 
 <!doctype html>
@@ -23,7 +46,20 @@ const { title, description } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    <link rel="canonical" href={canonical} />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={NAME} />
+    <meta property="og:locale" content="en_CA" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Water's Edge Massage Therapy logo beside coastal pines and calm water" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
     <link rel="icon" href={favicon} type="image/svg+xml" />
     <link rel="icon" href={favicon32} type="image/png" sizes="32x32" />
     <link rel="apple-touch-icon" href={appleTouch} />

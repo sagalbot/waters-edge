@@ -15,6 +15,13 @@ const { eyebrow, title } = Astro.props;
   <div class="container">
     <p class="eyebrow" transition:name="hero-eyebrow" transition:animate={wash}>{eyebrow}</p>
     <h1 transition:name="hero-title" transition:animate={wash}>{title}</h1>
+    {
+      Astro.slots.has("default") && (
+        <div class="page-hero__actions">
+          <slot />
+        </div>
+      )
+    }
   </div>
   <HeroRidge />
 </section>
@@ -35,5 +42,14 @@ const { eyebrow, title } = Astro.props;
     /* Keeps descenders inside the box the transition wash masks. */
     padding-bottom: 0.2em;
     margin-bottom: -0.2em;
+  }
+  .page-hero__actions {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 2rem;
+    margin-top: 2.5rem;
   }
 </style>

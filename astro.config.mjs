@@ -1,4 +1,5 @@
 import { defineConfig, fontProviders } from "astro/config";
+import sitemap from "@astrojs/sitemap";
 
 // Fontsource's variable font files, served through Astro's fonts API so it can generate
 // metric-matched fallbacks: text set in the fallback occupies the same space as the real
@@ -19,7 +20,11 @@ const fontsource = (pkg, file, weight) =>
 
 export default defineConfig({
   site: "https://www.watersedgemassage.com",
+  // Pages are served without a trailing slash (/about), matching the old Squarespace
+  // URLs (see html_handling in wrangler.jsonc).
+  trailingSlash: "never",
   devToolbar: { enabled: false },
+  integrations: [sitemap()],
   fonts: [
     {
       provider: fontProviders.local(),

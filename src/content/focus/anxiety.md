@@ -1,6 +1,8 @@
 ---
 title: Anxiety
 order: 1
+headline: "Massage Therapy for Anxiety in North Vancouver"
+description: "Trauma-informed massage therapy in North Vancouver to help calm the nervous system, ease muscle tension, and support better sleep. Book with Alexis Penner, RMT."
 summary: "Massage can help calm the nervous system, promoting slower breathing, a lower heart rate, and less muscle tension. Many people also notice improved mood and better sleep."
 ---
 

@@ -1,0 +1,276 @@
+---
+// A landing page per focus area, built to rank for searches like "TMJ massage North
+// Vancouver" and to turn that visit into a booking: Book in the hero, then Alexis's
+// write-up beside the prices, billing, and policy, then how to find the clinic.
+import { getCollection, render } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import PageHero from "../../components/PageHero.astro";
+import RatesTable from "../../components/RatesTable.astro";
+import Ridgeline from "../../components/Ridgeline.astro";
+import {
+  BOOK_ONLINE_URL,
+  CANCELLATION_POLICY,
+  MAP_URL,
+  PHONE,
+  PHONE_SMS,
+  PREGNANCY_RATES,
+  RATES,
+} from "../../site";
+import { businessId, reserveAction } from "../../schema";
+
+export async function getStaticPaths() {
+  const focus = (await getCollection("focus")).sort((a, b) => a.data.order - b.data.order);
+  return focus.map((entry) => ({
+    params: { focus: entry.id },
+    props: { entry, others: focus.filter((f) => f.id !== entry.id) },
+  }));
+}
+
+const { entry, others } = Astro.props;
+const { Content } = await render(entry);
+const { title, headline, description, summary } = entry.data;
+const pregnancy = entry.data.rates === "pregnancy";
+const rates = pregnancy ? PREGNANCY_RATES : RATES;
+const treatment = pregnancy ? "Pregnancy Massage" : "Registered Massage Therapy";
+
+const site = Astro.site!;
+const url = new URL(`/services/${entry.id}`, site).href;
+const schema = [
+  {
+    "@type": "Service",
+    "@id": `${url}#service`,
+    name: headline,
+    serviceType: pregnancy ? "Prenatal massage therapy" : `Registered massage therapy for ${title.toLowerCase()}`,
+    description: summary,
+    url,
+    provider: { "@id": businessId(site) },
+    areaServed: { "@type": "City", name: "North Vancouver" },
+    offers: rates.map((r) => ({
+      "@type": "Offer",
+      name: `${r.minutes} minute ${treatment}`,
+      price: r.amount,
+      priceCurrency: "CAD",
+      url: BOOK_ONLINE_URL,
+    })),
+    potentialAction: { ...reserveAction, target: { "@type": "EntryPoint", urlTemplate: BOOK_ONLINE_URL } },
+  },
+  {
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: site.href },
+      { "@type": "ListItem", position: 2, name: "Services", item: new URL("/services", site).href },
+      { "@type": "ListItem", position: 3, name: title, item: url },
+    ],
+  },
+];
+---
+
+<Base title={`${headline} | Water's Edge`} description={description} schema={schema}>
+  <PageHero eyebrow={`Services · ${title}`} title={headline}>
+    <a class="button" href={BOOK_ONLINE_URL}>Book online</a>
+    <a class="hero-text" href={PHONE_SMS}>or text {PHONE}</a>
+  </PageHero>
+
+  <nav class="crumbs container" aria-label="Breadcrumb">
+    <a href="/services">Services</a> <span aria-hidden="true">/</span> <span aria-current="page">{title}</span>
+  </nav>
+
+  <section class="detail container section">
+    <div class="detail__copy">
+      <p class="lead">{summary}</p>
+      <div class="detail__body"><Content /></div>
+      <p class="detail__about">
+        Since 2015, Alexis has been a dedicated Registered Massage Therapist, blending scientific knowledge with an
+        intuitive and compassionate approach to deliver personalized, therapeutic care.
+        <a href="/about">About Alexis</a>
+      </p>
+    </div>
+
+    <aside class="book" aria-labelledby="book-title">
+      <h2 id="book-title" class="eyebrow">{treatment}</h2>
+      <RatesTable rates={rates} />
+      <a class="button book__button" href={BOOK_ONLINE_URL}>Book online</a>
+      <div class="book__notes">
+        <p>
+          All initial appointments include a health history intake and assessment, establishing treatment goals and
+          consent, treatment and home exercise.
+        </p>
+        {!pregnancy && <p>The 45 minute appointment is for returning clients. Please book 60 minutes for your first visit.</p>}
+        <p>We offer Direct Billing to Pacific Blue Cross, Telus Health, Sunlife, Empire Life, and GreenShield.</p>
+        <p>We are currently accepting new ICBC cases. We do not bill WorkSafeBC.</p>
+        <p><strong>Cancellation policy:</strong> {CANCELLATION_POLICY}</p>
+      </div>
+    </aside>
+  </section>
+
+  <section class="visit" aria-labelledby="visit-title">
+    <div class="container visit__grid">
+      <div>
+        <h2 id="visit-title" class="eyebrow">Visit</h2>
+        <address>
+          <a href={MAP_URL}>500-224 Esplanade St West, North Vancouver, B.C</a><br />
+          Lobby and clinic are on 5th floor.
+        </address>
+      </div>
+      <div class="visit__details">
+        <p>Guest parking is behind the building in Stalls #13 and #14 only.</p>
+        <p><a href={PHONE_SMS}>{PHONE}</a> – Text Only</p>
+        <a class="button" href={BOOK_ONLINE_URL}>Book now</a>
+      </div>
+    </div>
+    <div class="visit__ridge"><Ridgeline lines={5} /></div>
+  </section>
+
+  <section class="more container section" aria-labelledby="more-title">
+    <h2 id="more-title" class="eyebrow">Other Focus Areas</h2>
+    <ul>
+      {
+        others.map((f) => (
+          <li>
+            <a href={`/services/${f.id}`}>{f.data.title}</a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</Base>
+
+<style>
+  .hero-text {
+    color: var(--cream);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.3em;
+  }
+  .crumbs {
+    padding-top: 2rem;
+    font-size: 0.875rem;
+    color: color-mix(in srgb, var(--ink) 70%, transparent);
+  }
+  .crumbs span[aria-hidden] {
+    margin: 0 0.5rem;
+  }
+  .detail {
+    display: grid;
+    grid-template-columns: 7fr 5fr;
+    gap: 3rem clamp(3rem, 8vw, 8rem);
+    align-items: start;
+    padding-top: clamp(2.5rem, 5vw, 4rem);
+  }
+  .detail__copy {
+    max-width: 38rem;
+  }
+  .lead {
+    font-family: var(--serif);
+    font-size: clamp(1.625rem, 2.6vw, 2.25rem);
+    line-height: 1.25;
+    color: var(--cedar);
+    margin: 0 0 2rem;
+  }
+  .detail__body :global(p) {
+    margin: 0 0 1.5em;
+  }
+  .detail__about {
+    margin: 2.5rem 0 0;
+    padding-top: 2rem;
+    border-top: 1px solid var(--rule);
+    font-size: 0.9375rem;
+  }
+  .detail__about a {
+    margin-left: 0.25rem;
+  }
+  .book {
+    position: sticky;
+    top: 7rem;
+    padding: clamp(1.75rem, 3vw, 2.5rem);
+    background: var(--sand);
+  }
+  .book .eyebrow {
+    margin: 0 0 1rem;
+  }
+  .book__button {
+    margin-top: 2rem;
+    width: 100%;
+  }
+  .book__notes {
+    margin-top: 2rem;
+  }
+  .book__notes p {
+    margin: 0 0 0.9em;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: color-mix(in srgb, var(--ink) 80%, transparent);
+  }
+  .book__notes strong {
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  .visit {
+    position: relative;
+    padding: var(--section) 0 clamp(8rem, 15vw, 13rem);
+    border-top: 1px solid var(--rule);
+    overflow: hidden;
+  }
+  .visit__grid {
+    display: grid;
+    grid-template-columns: 7fr 5fr;
+    gap: 2rem clamp(3rem, 8vw, 8rem);
+  }
+  .visit .eyebrow {
+    margin: 0 0 1.5rem;
+  }
+  .visit address {
+    font-style: normal;
+    font-family: var(--serif);
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    line-height: 1.25;
+    color: var(--cedar);
+  }
+  .visit address a {
+    color: inherit;
+    text-decoration-color: var(--rule);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+  .visit__details p {
+    margin: 0 0 1.25rem;
+  }
+  .visit__ridge {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -2px;
+    color: var(--moss);
+    opacity: 0.45;
+    pointer-events: none;
+  }
+
+  .more .eyebrow {
+    margin: 0 0 1.5rem;
+  }
+  .more ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 3rem;
+  }
+  .more a {
+    font-family: var(--serif);
+    font-size: clamp(1.5rem, 2.2vw, 1.875rem);
+    color: var(--cedar);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+
+  @media (max-width: 860px) {
+    .detail,
+    .visit__grid {
+      grid-template-columns: 1fr;
+    }
+    .book {
+      position: static;
+    }
+  }
+</style>

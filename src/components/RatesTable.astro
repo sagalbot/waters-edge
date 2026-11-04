@@ -1,12 +1,20 @@
 ---
 import { RATES } from "../site";
+
+interface Props {
+  rates?: { length: string; price: string; note?: string }[];
+}
+const { rates = RATES } = Astro.props;
 ---
 
 <dl class="rates-table">
   {
-    RATES.map((r) => (
+    rates.map((r) => (
       <div>
-        <dt>{r.length}</dt>
+        <dt>
+          {r.length}
+          {r.note && <span class="rates-table__note">{r.note}</span>}
+        </dt>
         <dd>{r.price}</dd>
       </div>
     ))
@@ -31,8 +39,18 @@ import { RATES } from "../site";
     font-size: clamp(1.5rem, 2.4vw, 2rem);
     color: var(--cedar);
   }
+  .rates-table__note {
+    display: block;
+    margin-top: 0.25rem;
+    font-family: var(--sans);
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--moss);
+  }
   dd {
     margin: 0;
+    white-space: nowrap;
     font-size: 1.0625rem;
     letter-spacing: 0.02em;
   }

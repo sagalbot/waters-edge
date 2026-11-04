@@ -1,6 +1,8 @@
 ---
 title: TMJ Dysfunction
 order: 5
+headline: "TMJ Massage Therapy in North Vancouver"
+description: "Massage therapy for TMJ dysfunction and jaw pain in North Vancouver, including intraoral techniques when appropriate. Book with Alexis Penner, RMT."
 summary: "Treatment focuses on the jaw and neck muscles, including intra-oral techniques when appropriate, to reduce tension and improve jaw comfort and mobility."
 ---
 

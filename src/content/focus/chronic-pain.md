@@ -1,6 +1,8 @@
 ---
 title: Chronic Pain
 order: 2
+headline: "Massage Therapy for Chronic Pain in North Vancouver"
+description: "Evidence-informed massage therapy for chronic and persistent pain in North Vancouver, tailored to your pain, tolerance, and goals. Book with Alexis Penner, RMT."
 summary: "Massage works largely through the nervous system, helping reduce pain sensitivity and protective muscle guarding. It’s most effective alongside movement and self-care."
 ---
 

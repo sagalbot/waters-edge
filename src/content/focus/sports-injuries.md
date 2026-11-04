@@ -2,6 +2,8 @@
 title: Sports Injuries
 subtitle: Sprains and Strains
 order: 3
+headline: "Sports Injury Massage in North Vancouver"
+description: "Registered massage therapy for sprains, strains, and sports injuries in North Vancouver, adjusted to each stage of healing. Direct billing available. Book online."
 summary: "Massage can ease muscle spasm and pain and help you move with more comfort as you heal. Treatment is adjusted to the stage of your injury and supports your rehab plan."
 ---
 

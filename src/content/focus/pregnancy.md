@@ -1,6 +1,9 @@
 ---
 title: Pregnancy
 order: 4
+headline: "Pregnancy Massage in North Vancouver"
+description: "Prenatal massage in North Vancouver for low back and hip discomfort, leg fatigue, and tension, with positioning for each trimester. Book with Alexis Penner, RMT."
+rates: pregnancy
 summary: "Prenatal massage can ease low back and hip discomfort, leg fatigue, and muscular tension. Treatment is offered side-lying or, for some clients, face down using a specialized pregnancy pillow, with modifications for each trimester."
 ---
 

@@ -62,7 +62,7 @@ const focus = (await getCollection("focus")).sort((a, b) => a.data.order - b.dat
         {
           focus.map((f) => (
             <li>
-              <a href={`/services#${f.id}`}>{f.data.title}</a>
+              <a href={`/services/${f.id}`}>{f.data.title}</a>
               <p>{f.data.summary}</p>
             </li>
           ))
