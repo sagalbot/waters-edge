@@ -5,7 +5,8 @@
   --stone: #cfc6b6;
   --sand: #ebe4d8;
   --cream: #f4efe6;
-  --clay: #c98468;
+  /* The original site's accent. Dark ink on it reads at 5.4:1. */
+  --clay: #d4967d;
   --rule: color-mix(in srgb, var(--cedar) 18%, transparent);
 
   /* Defined by the fonts config in astro.config.mjs, with metric-matched fallbacks. */
@@ -132,7 +133,7 @@ a {
   transition: background-color 0.3s ease;
 }
 .button:hover {
-  background: #d4967d;
+  background: color-mix(in srgb, var(--clay) 75%, var(--cream));
 }
 .button:focus-visible,
 a:focus-visible,

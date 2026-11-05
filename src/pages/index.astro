@@ -26,10 +26,12 @@ const focus = (await getCollection("focus")).sort((a, b) => a.data.order - b.dat
       </div>
     </div>
     <div class="hero__photo">
+      <!-- 800w is the smallest file a 412px phone at 1.75x can use (720w fell just short,
+           so phones fetched the 1100w file for the LCP image). -->
       <Image
         src={landscape}
         alt="Coastal pine trees framing calm water and distant mountains"
-        widths={[720, 1100, 1500]}
+        widths={[800, 1100, 1500]}
         sizes="(max-width: 860px) 100vw, 50vw"
         loading="eager"
         fetchpriority="high"

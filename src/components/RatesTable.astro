@@ -46,7 +46,8 @@ const { rates = RATES } = Astro.props;
     font-size: 0.75rem;
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    color: var(--moss);
+    /* Moss deepened toward ink, so the small caps read at 4.5:1 on sand. */
+    color: color-mix(in srgb, var(--moss) 70%, var(--ink));
   }
   dd {
     margin: 0;
