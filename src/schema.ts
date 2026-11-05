@@ -1,5 +1,15 @@
 // schema.org JSON-LD for search engines and AI assistants, built from the facts in site.ts.
-import { ADDRESS, BOOKING_URL, EMAIL, MAP_URL, NAME, PREGNANCY_RATES, RATES } from "./site";
+import {
+  ADDRESS,
+  BOOKING_URL,
+  EMAIL,
+  GOOGLE_PROFILE_URL,
+  MAP_URL,
+  NAME,
+  PREGNANCY_RATES,
+  RATES,
+  REGISTRY_URL,
+} from "./site";
 
 export const businessId = (site: URL) => new URL("/#business", site).href;
 
@@ -44,6 +54,8 @@ export function business(site: URL, urls: { image: string; logo: string; photo: 
     },
     geo: { "@type": "GeoCoordinates", latitude: ADDRESS.lat, longitude: ADDRESS.lng },
     hasMap: MAP_URL,
+    // The same business elsewhere, so search engines tie these profiles to this site.
+    sameAs: [GOOGLE_PROFILE_URL, BOOKING_URL],
     areaServed: { "@type": "City", name: "North Vancouver" },
     priceRange: "$110–$160 + GST",
     currenciesAccepted: "CAD",
@@ -53,6 +65,7 @@ export function business(site: URL, urls: { image: string; logo: string; photo: 
       jobTitle: "Registered Massage Therapist",
       image: urls.photo,
       url: new URL("/about", site).href,
+      sameAs: [REGISTRY_URL],
     },
     hasOfferCatalog: {
       "@type": "OfferCatalog",
