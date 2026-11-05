@@ -1,0 +1,7 @@
+# Squarespace's old homepage URL, still in production's sitemap.
+/home / 301
+/home/ / 301
+
+# Permanent trailing-slash redirects (the asset server's own are 307).
+/:page/ /:page 301
+/services/:area/ /services/:area 301

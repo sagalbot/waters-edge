@@ -37,7 +37,7 @@ Redrawn as SVG in `brand/logo/`. The files are regenerated with `brand/build-log
 - **Mark**: the original five-ring ripple/contour mark, measured from the PNG and smoothed with a uniform stroke.
 - **Wordmark**: "WATER’S EDGE" in Cormorant Garamond (wght 560, +0.10em tracking), with "MASSAGE THERAPY" in Jost (400, +0.46em tracking) set to the same width. Both are converted to outlines.
 - **Lockups**: stacked, horizontal (for the header), and mark-only, each in cedar `#2E4236` and cream `#F4EFE6`.
-- **Favicon**: three rings on a cedar tile (`favicon.svg`, 32 px, 180 px, and 512 px PNGs).
+- **Favicon**: three rings on a cedar tile (`favicon.svg`, 32 px, 180 px, and 512 px PNGs). `public/favicon.ico` (16, 32, and 48 px) is made from the 512 px PNG: `magick brand/logo/icon-512.png -define icon:auto-resize=48,32,16 public/favicon.ico`.
 
 ## Layout and interaction
 

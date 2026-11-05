@@ -5,6 +5,8 @@
     "directory": "./dist",
     // Serve /about from about/index.html directly, matching the site's links, instead of
     // redirecting to /about/ first.
-    "html_handling": "drop-trailing-slash"
+    "html_handling": "drop-trailing-slash",
+    // Unknown URLs get dist/404.html with a 404 status.
+    "not_found_handling": "404-page"
   }
 }
