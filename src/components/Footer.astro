@@ -1,7 +1,7 @@
 ---
 import Logo from "../../brand/logo/logo-horizontal-cream.svg";
 import Mark from "../../brand/logo/mark-cream.svg";
-import { EMAIL, MAP_URL, NAV, PHONE, PHONE_SMS } from "../site";
+import { ADDRESS, EMAIL, MAP_URL, NAV, PHONE, PHONE_SMS } from "../site";
 ---
 
 <footer class="site-footer">
@@ -26,9 +26,10 @@ import { EMAIL, MAP_URL, NAV, PHONE, PHONE_SMS } from "../site";
       </p>
     </div>
     <div class="site-footer__contact">
-      <h2 class="eyebrow">Location</h2>
-      <p><a href={MAP_URL}>500-224 Esplanade St West</a><br />North Vancouver, B.C</p>
-      <h2 class="eyebrow">Contact</h2>
+      <!-- Labels, not headings: they would repeat in every page's outline. -->
+      <p class="eyebrow">Location</p>
+      <p><a href={MAP_URL}>{ADDRESS.street}</a><br />{ADDRESS.locality}, {ADDRESS.region}</p>
+      <p class="eyebrow">Contact</p>
       <p>
         <a href={`mailto:${EMAIL}`}>{EMAIL}</a><br />
         <a href={PHONE_SMS}>{PHONE}</a> – Text Only
@@ -90,7 +91,7 @@ import { EMAIL, MAP_URL, NAV, PHONE, PHONE_SMS } from "../site";
   }
   .site-footer__contact .eyebrow {
     color: color-mix(in srgb, var(--cream) 65%, transparent);
-    margin-bottom: 0.5rem;
+    margin: 0 0 0.5rem;
   }
   .site-footer__contact p {
     margin: 0 0 1.75rem;

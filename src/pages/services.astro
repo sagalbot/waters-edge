@@ -1,23 +1,18 @@
 ---
-import { getCollection, render } from "astro:content";
+import { getCollection } from "astro:content";
 import Base from "../layouts/Base.astro";
 import PageHero from "../components/PageHero.astro";
 import Mark from "../../brand/logo/mark-cedar.svg";
 import { BOOKING_URL } from "../site";
 
-const focus = await Promise.all(
-  (await getCollection("focus"))
-    .sort((a, b) => a.data.order - b.data.order)
-    .map(async (f) => ({
-      ...f,
-      Content: (await render(f)).Content,
-    })),
-);
+// Each focus area's full write-up lives only on its own page (/services/<area>), so
+// this page lists the one-line summaries and links there rather than duplicating it.
+const focus = (await getCollection("focus")).sort((a, b) => a.data.order - b.data.order);
 ---
 
 <Base
-  title="Services | Water's Edge Massage Therapy"
-  description="Therapeutic massage for injury recovery, relaxation massage for nervous system regulation, and focused treatments for chronic pain, TMJ dysfunction, stress-related tension, and sports injuries."
+  title="Massage Services in North Vancouver | Water's Edge"
+  description="Massage therapy in North Vancouver for injury recovery, relaxation, chronic pain, TMJ dysfunction, stress-related tension, sports injuries, and pregnancy."
 >
   <PageHero eyebrow="Services" title="Our Services" />
 
@@ -51,14 +46,16 @@ const focus = await Promise.all(
     <h2 id="focus-title" class="eyebrow">Focus Areas</h2>
     <ul>
       {
-        focus.map(({ id, data, Content }) => (
+        focus.map(({ id, data }) => (
           <li id={id}>
-            <h3>
-              <a href={`/services/${id}`}>{data.title}</a>
-              {data.subtitle && <span class="focus__subtitle">{data.subtitle}</span>}
-            </h3>
+            <div>
+              <h3>
+                <a href={`/services/${id}`}>{data.title}</a>
+              </h3>
+              {data.subtitle && <p class="focus__subtitle">{data.subtitle}</p>}
+            </div>
             <div class="focus__body">
-              <Content />
+              <p>{data.summary}</p>
               <a class="text-link" href={`/services/${id}`}>
                 {data.headline} <span aria-hidden="true">→</span>
               </a>
@@ -141,8 +138,7 @@ const focus = await Promise.all(
     font-size: 1.125rem;
   }
   .focus__subtitle {
-    display: block;
-    margin-top: 0.5rem;
+    margin: 0.5rem 0 0;
     font-family: var(--sans);
     font-size: 0.75rem;
     letter-spacing: 0.28em;
@@ -152,11 +148,8 @@ const focus = await Promise.all(
   .focus__body {
     max-width: 38rem;
   }
-  .focus__body :global(p) {
-    margin: 0 0 1em;
-  }
-  .focus__body :global(p:last-child) {
-    margin-bottom: 0;
+  .focus__body p {
+    margin: 0;
   }
   @media (max-width: 860px) {
     .focus li {

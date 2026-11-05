@@ -8,6 +8,7 @@ export const PHONE = "(604) 754-4886";
 export const PHONE_SMS = "sms:+16047544886";
 export const MAP_URL = "https://g.co/kgs/QwZML7Z";
 // The postal code is left out until Alexis confirms it (V7M 3H8 on Google, V7M 1A4 on Jane).
+// Every page shows the address in this one form (consistent NAP for local search).
 export const ADDRESS = {
   street: "500-224 West Esplanade",
   locality: "North Vancouver",
@@ -16,6 +17,7 @@ export const ADDRESS = {
   lat: 49.3131151,
   lng: -123.0834664,
 };
+export const ADDRESS_LINE = `${ADDRESS.street}, ${ADDRESS.locality}, ${ADDRESS.region}`;
 
 export const NAV = [
   { href: "/about", label: "About" },

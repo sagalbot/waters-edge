@@ -3,7 +3,7 @@ import { glob } from "astro/loaders";
 import { z } from "astro/zod";
 
 // One Markdown file per focus area, in Alexis's words. The summary shows on the
-// homepage; the body is the long version on the Services page and on the focus area's
+// homepage and the Services page; the body is the long version, only on the focus area's
 // own landing page (/services/<file name>), whose h1 and title tag come from `headline`
 // and meta description from `description`.
 const focus = defineCollection({

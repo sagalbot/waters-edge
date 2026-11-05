@@ -8,6 +8,7 @@ import PageHero from "../../components/PageHero.astro";
 import RatesTable from "../../components/RatesTable.astro";
 import Ridgeline from "../../components/Ridgeline.astro";
 import {
+  ADDRESS_LINE,
   BOOK_ONLINE_URL,
   CANCELLATION_POLICY,
   MAP_URL,
@@ -108,7 +109,7 @@ const schema = [
       <div>
         <h2 id="visit-title" class="eyebrow">Visit</h2>
         <address>
-          <a href={MAP_URL}>500-224 Esplanade St West, North Vancouver, B.C</a><br />
+          <a href={MAP_URL}>{ADDRESS_LINE}</a><br />
           Lobby and clinic are on 5th floor.
         </address>
       </div>
