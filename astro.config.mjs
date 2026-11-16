@@ -19,7 +19,7 @@ const fontsource = (pkg, file, weight) =>
   }));
 
 export default defineConfig({
-  site: "https://www.watersedgemassage.com",
+  site: "https://watersedgemassage.com",
   // Pages are served without a trailing slash (/about), matching the old Squarespace
   // URLs (see html_handling in wrangler.jsonc).
   trailingSlash: "never",
