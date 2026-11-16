@@ -1,6 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
 import PageHero from "../components/PageHero.astro";
+import ContactForm from "../components/ContactForm.astro";
 import { ADDRESS, ADDRESS_LINE, BOOKING_URL, EMAIL, PHONE, PHONE_SMS } from "../site";
 
 const mapSrc =
@@ -29,7 +30,7 @@ const mapSrc =
       </p>
       <a class="button" href={BOOKING_URL}>Book now</a>
     </div>
-    {/* ContactForm returns once Cloudflare can deliver to Alexis's verified address. */}
+    <ContactForm submit="Send" />
   </section>
 
   <iframe

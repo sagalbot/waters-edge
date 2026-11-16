@@ -2,6 +2,7 @@
 import { Image } from "astro:assets";
 import Base from "../layouts/Base.astro";
 import PageHero from "../components/PageHero.astro";
+import ContactForm from "../components/ContactForm.astro";
 import { BOOKING_URL, EMAIL } from "../site";
 import portrait from "../../content/images/IMG_9454.jpg";
 
@@ -68,7 +69,7 @@ const certificates = [
       <div>
         <h2 id="reach-title">Have Questions or Want to Book a Massage?</h2>
         <p>
-          I’d love to hear from you. Feel free to email me directly. I’ll get back
+          I’d love to hear from you. Feel free to reach out using the form below or email me directly. I’ll get back
           to you within 1–2 business days.
         </p>
         <p class="signoff">
@@ -81,6 +82,7 @@ const certificates = [
           <a href={`mailto:${EMAIL}`}>{EMAIL}</a>
         </p>
       </div>
+      <ContactForm submit="Submit" />
     </div>
   </section>
 </Base>
