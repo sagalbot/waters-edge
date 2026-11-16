@@ -1,12 +1,22 @@
 {
   "name": "waters-edge",
   "compatibility_date": "2026-10-29",
+  // Handles the contact form (/api/contact); every other request is a static file.
+  "main": "worker.ts",
   "assets": {
     "directory": "./dist",
     // Serve /about from about/index.html directly, matching the site's links, instead of
     // redirecting to /about/ first.
     "html_handling": "drop-trailing-slash",
     // Unknown URLs get dist/404.html with a 404 status.
-    "not_found_handling": "404-page"
+    "not_found_handling": "404-page",
+    "run_worker_first": ["/api/*"]
+  },
+  // Contact form email (see worker.ts). CONTACT_TO must be a verified destination address in
+  // the account's Email Routing. TURNSTILE_SECRET is a secret: `npx wrangler secret put TURNSTILE_SECRET`.
+  "send_email": [{ "name": "CONTACT_EMAIL" }],
+  "vars": {
+    "CONTACT_FROM": "contact@watersedgemassage.com",
+    "CONTACT_TO": "alexispenner.rmt@gmail.com"
   }
 }
