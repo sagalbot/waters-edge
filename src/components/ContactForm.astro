@@ -11,22 +11,37 @@ const { submit } = Astro.props;
 const sitekey = import.meta.env.PROD ? "0x4AAAAAAGD1xXEHYWvqd7Tv" : "1x00000000000000000000AA";
 ---
 
-<form class="contact-form" action="/api/contact" method="post" data-email={EMAIL}>
-  <label>
-    <span>Name</span>
-    <input name="name" autocomplete="name" required />
-  </label>
-  <label>
-    <span>Email</span>
-    <input name="email" type="email" autocomplete="email" required />
-  </label>
-  <label>
-    <span>Message</span>
-    <textarea name="message" rows="6" required></textarea>
-  </label>
-  <div class="contact-form__check" data-sitekey={sitekey}></div>
-  <button class="button" type="submit">{submit}</button>
-  <p class="contact-form__status" role="status"></p>
+<form class="contact-form" action="/api/contact" method="post" data-email={EMAIL} data-state="idle">
+  <div class="contact-form__fields">
+    <label>
+      <span>Name</span>
+      <input name="name" autocomplete="name" required />
+    </label>
+    <label>
+      <span>Email</span>
+      <input name="email" type="email" autocomplete="email" required />
+    </label>
+    <label>
+      <span>Message</span>
+      <textarea name="message" rows="6" required></textarea>
+    </label>
+    <div class="contact-form__check" data-sitekey={sitekey}></div>
+    <button class="button contact-form__submit" type="submit">
+      <span class="contact-form__label">{submit}</span>
+      <span class="contact-form__busy" aria-hidden="true"><i class="contact-form__ripple"></i>Sending</span>
+    </button>
+    <p class="contact-form__status" role="status"></p>
+  </div>
+
+  <div class="contact-form__done" hidden>
+    <svg class="contact-form__tick" viewBox="0 0 48 48" aria-hidden="true">
+      <circle cx="24" cy="24" r="22"></circle>
+      <path d="M15 24.5l6 6 12-13"></path>
+    </svg>
+    <h3 class="contact-form__thanks" tabindex="-1">Thank you.</h3>
+    <p>Your message has been sent, and we'll be in touch soon.</p>
+    <button class="contact-form__again" type="button">Send another message</button>
+  </div>
 </form>
 
 <script>
@@ -62,30 +77,67 @@ const sitekey = import.meta.env.PROD ? "0x4AAAAAAGD1xXEHYWvqd7Tv" : "1x000000000
     if (!form) return;
     const check = form.querySelector<HTMLElement>(".contact-form__check")!;
     const status = form.querySelector<HTMLElement>(".contact-form__status")!;
-    const button = form.querySelector<HTMLButtonElement>("button")!;
-    const fallback = `Sorry, your message didn't send. Please email us at ${form.dataset.email}.`;
+    const submit = form.querySelector<HTMLButtonElement>(".contact-form__submit")!;
+    const fields = form.querySelectorAll<HTMLInputElement | HTMLTextAreaElement>("input:not([type=hidden]), textarea");
+    const done = form.querySelector<HTMLElement>(".contact-form__done")!;
+    const thanks = form.querySelector<HTMLElement>(".contact-form__thanks")!;
+    const email = form.dataset.email!;
+
+    const setState = (state: "idle" | "sending" | "sent" | "error") => {
+      form.dataset.state = state;
+      const sending = state === "sending";
+      fields.forEach((field) => (field.readOnly = sending));
+      // aria-disabled rather than disabled, so the button keeps keyboard focus while it sends.
+      submit.setAttribute("aria-disabled", String(sending));
+      submit.setAttribute("aria-label", sending ? "Sending your message" : "");
+      if (!sending) submit.removeAttribute("aria-label");
+      done.hidden = state !== "sent";
+    };
+
+    const showError = (text: string, withEmail = false) => {
+      status.replaceChildren(text);
+      if (withEmail) {
+        const link = document.createElement("a");
+        link.href = `mailto:${email}`;
+        link.textContent = email;
+        status.append(" Please email us at ", link, ".");
+      }
+      setState("error");
+    };
 
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
-      button.disabled = true;
-      status.textContent = "Sending…";
-      const response = await fetch(form.action, { method: "POST", body: new FormData(form) }).catch(() => null);
-      if (response?.ok) {
-        form.reset();
-        status.textContent = "Thank you. Your message has been sent, and we'll be in touch soon.";
-      } else if (response?.status === 403) {
-        status.textContent = "We couldn't confirm you're not a bot. Please try again.";
-      } else {
-        status.textContent = fallback;
-      }
+      if (form.dataset.state === "sending") return;
+      const body = new FormData(form);
+      status.replaceChildren("Sending your message…");
+      setState("sending");
+      const response = await fetch(form.action, { method: "POST", body }).catch(() => null);
       if (widget) turnstile.reset(widget);
-      button.disabled = false;
+      if (response?.ok) {
+        const first = String(body.get("name") ?? "").trim().split(/\s+/)[0];
+        thanks.textContent = first ? `Thank you, ${first}.` : "Thank you.";
+        form.reset();
+        status.replaceChildren();
+        setState("sent");
+        // The panel is shorter than the form, so bring its top into view below the sticky header.
+        thanks.focus({ preventScroll: true });
+        done.scrollIntoView({ block: "nearest", behavior: "smooth" });
+      } else if (response?.status === 403) {
+        showError("We couldn't confirm you're not a bot. Please try again.");
+      } else {
+        showError("Sorry, your message didn't send.", true);
+      }
+    });
+
+    form.querySelector(".contact-form__again")!.addEventListener("click", () => {
+      setState("idle");
+      fields[0].focus();
     });
 
     try {
       await loadTurnstile();
     } catch {
-      status.textContent = fallback;
+      showError("Sorry, the form couldn't load.", true);
       return;
     }
     // The check runs in the background; the widget only appears if Cloudflare needs the visitor to click.
@@ -102,15 +154,22 @@ const sitekey = import.meta.env.PROD ? "0x4AAAAAAGD1xXEHYWvqd7Tv" : "1x000000000
 </script>
 
 <style>
-  .contact-form {
+  .contact-form__fields {
     display: grid;
     gap: 1.75rem;
+    transition: opacity 0.3s ease;
+  }
+  .contact-form[data-state="sent"] .contact-form__fields {
+    display: none;
+  }
+  .contact-form[data-state="sending"] :is(input, textarea) {
+    opacity: 0.55;
   }
   label {
     display: grid;
     gap: 0.5rem;
   }
-  span {
+  label > span {
     font-size: 0.75rem;
     letter-spacing: 0.28em;
     text-transform: uppercase;
@@ -125,6 +184,7 @@ const sitekey = import.meta.env.PROD ? "0x4AAAAAAGD1xXEHYWvqd7Tv" : "1x000000000
     border-radius: 0;
     padding: 0.5rem 0;
     resize: vertical;
+    transition: opacity 0.3s ease;
   }
   input:focus,
   textarea:focus {
@@ -132,16 +192,66 @@ const sitekey = import.meta.env.PROD ? "0x4AAAAAAGD1xXEHYWvqd7Tv" : "1x000000000
     border-bottom-color: var(--cedar);
     box-shadow: 0 1px 0 var(--cedar);
   }
-  button {
+
+  /* Both labels share one grid cell, so the button keeps its width while it sends. */
+  .contact-form__submit {
+    display: inline-grid;
     justify-self: start;
     border: 0;
     cursor: pointer;
     margin-top: 0.5rem;
   }
-  button:disabled {
-    opacity: 0.6;
-    cursor: progress;
+  .contact-form__label,
+  .contact-form__busy {
+    grid-area: 1 / 1;
+    transition: opacity 0.2s ease;
   }
+  .contact-form__busy {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    opacity: 0;
+  }
+  .contact-form[data-state="sending"] .contact-form__submit {
+    cursor: progress;
+    background: color-mix(in srgb, var(--clay) 75%, var(--cream));
+  }
+  .contact-form[data-state="sending"] .contact-form__label {
+    opacity: 0;
+  }
+  .contact-form[data-state="sending"] .contact-form__busy {
+    opacity: 1;
+  }
+  /* Rings spreading outward, like the logo's contour mark. */
+  .contact-form__ripple {
+    position: relative;
+    width: 1.15em;
+    height: 1.15em;
+  }
+  .contact-form__ripple::before,
+  .contact-form__ripple::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border: 2px solid currentColor;
+    border-radius: 50%;
+    animation: ripple 1.6s cubic-bezier(0.2, 0.6, 0.4, 1) infinite;
+  }
+  .contact-form__ripple::after {
+    animation-delay: -0.8s;
+  }
+  @keyframes ripple {
+    from {
+      transform: scale(0.2);
+      opacity: 1;
+    }
+    to {
+      transform: scale(1);
+      opacity: 0;
+    }
+  }
+
   /* Out of the grid (no gap) until Turnstile needs the visitor; not display: none, so it still runs. */
   .contact-form__check:not(.is-visible) {
     position: absolute;
@@ -150,7 +260,111 @@ const sitekey = import.meta.env.PROD ? "0x4AAAAAAGD1xXEHYWvqd7Tv" : "1x000000000
     margin: 0;
     color: var(--cedar);
   }
-  .contact-form__status:empty {
+  .contact-form__status:empty,
+  .contact-form[data-state="sending"] .contact-form__status {
+    /* Kept for screen readers while sending; the button already shows it. */
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+  .contact-form[data-state="error"] .contact-form__status {
+    padding: 0.9rem 1.1rem;
+    border-left: 3px solid var(--clay);
+    background: color-mix(in srgb, var(--clay) 14%, transparent);
+    color: var(--ink);
+  }
+  .contact-form__status a {
+    color: var(--cedar);
+  }
+
+  .contact-form__done {
+    display: grid;
+    justify-items: start;
+    gap: 1rem;
+    padding: clamp(2rem, 4vw, 3rem) 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    scroll-margin: 8rem 0 2rem;
+    animation: settle 0.6s ease both;
+  }
+  .contact-form__done[hidden] {
     display: none;
+  }
+  .contact-form__done p {
+    margin: 0;
+    max-width: 26rem;
+  }
+  .contact-form__thanks {
+    margin: 0.5rem 0 0;
+    font-family: var(--serif);
+    font-size: clamp(2rem, 3.4vw, 2.75rem);
+    font-weight: 400;
+    line-height: 1.1;
+    color: var(--cedar);
+    outline: none;
+  }
+  .contact-form__tick {
+    width: 3rem;
+    height: 3rem;
+    fill: none;
+    stroke: var(--cedar);
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .contact-form__tick circle {
+    stroke-dasharray: 139;
+    animation: draw 0.8s ease both;
+  }
+  .contact-form__tick path {
+    stroke-dasharray: 30;
+    animation: draw 0.4s 0.6s ease both;
+  }
+  @keyframes draw {
+    from {
+      stroke-dashoffset: var(--len, 139);
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+  .contact-form__tick path {
+    --len: 30;
+  }
+  @keyframes settle {
+    from {
+      opacity: 0;
+      transform: translateY(0.75rem);
+    }
+  }
+  .contact-form__again {
+    margin-top: 0.75rem;
+    padding: 0;
+    border: 0;
+    background: none;
+    font: inherit;
+    color: var(--cedar);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.35em;
+    cursor: pointer;
+  }
+  .contact-form__again:focus-visible {
+    outline: 2px solid var(--moss);
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .contact-form__ripple::before,
+    .contact-form__ripple::after,
+    .contact-form__tick :is(circle, path),
+    .contact-form__done {
+      animation: none;
+    }
+    .contact-form__ripple::after {
+      transform: scale(0.5);
+    }
   }
 </style>
